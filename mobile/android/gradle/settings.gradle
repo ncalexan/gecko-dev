@@ -1,2 +1,3 @@
 include ':app' //, ':libraries:background', ':libraries:geckoview', ':libraries:fennec'
+include ':libraries:thirdparty'
 include ':libraries:geckoview'

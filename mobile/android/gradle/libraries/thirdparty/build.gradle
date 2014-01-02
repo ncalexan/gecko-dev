@@ -1,0 +1,35 @@
+topsrcdir = '../../../../..' // XXX
+topobjdir = '../../../../../objdir-droid' // XXX
+
+buildDir = "$topobjdir/mobile/android/gradle/libraries/thirdparty/build"
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.7.3'
+    }
+}
+
+apply plugin: 'android-library'
+
+android {
+    compileSdkVersion 16
+    buildToolsVersion '17.0.0'
+
+    lintOptions {
+        // If true, stop the gradle build if errors are found.
+        abortOnError false
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile "AndroidManifest.xml"
+            java {
+                srcDir "$topsrcdir/mobile/android/thirdparty"
+            }
+        }
+    }
+}

@@ -19,11 +19,11 @@ dependencies {
     compile files('/usr/local/Cellar/android-sdk/22.3/extras/android/support/v4/android-support-v4.jar') // XXX
 }
 
-// dependencies {
-//     compile project(':libraries:background')
+dependencies {
+    compile project(':libraries:thirdparty')
 //     compile project(':libraries:geckoview')
 //     compile project(':libraries:fennec')
-// }
+}
 
 android {
     compileSdkVersion 16
@@ -43,7 +43,6 @@ android {
             manifest.srcFile "AndroidManifest.xml"
             java {
               srcDirs = [
-                "$topsrcdir/mobile/android/thirdparty",
                 "$topsrcdir/mobile/android/base",
                 "$topobjdir/mobile/android/base/generated",
               ]
