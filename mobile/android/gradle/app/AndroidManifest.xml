@@ -1,0 +1,2358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="org.mozilla.fennec_nalexander"
+      android:installLocation="auto"
+      android:versionCode="2014010210"
+      android:versionName="29.0a1"
+      android:sharedUserId="org.mozilla.fennec_nalexander.sharedID"
+      >
+    <uses-sdk android:minSdkVersion="8"
+              android:targetSdkVersion="16"/>
+
+    <!-- So we can start our service. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- So we can receive messages from Fennec. -->
+    <uses-permission android:name="org.mozilla.fennec_nalexander.permission.PER_ANDROID_PACKAGE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <!-- So we can start our service. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- So we can receive messages from Fennec. -->
+    <uses-permission android:name="org.mozilla.fennec_nalexander.permission.PER_ANDROID_PACKAGE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+
+    <!-- A signature level permission granted only to the Firefox
+         versions sharing an Android Account type.  This needs to
+         agree with GlobalConstants.PER_ACCOUNT_TYPE_PERMISSION. -->
+    <permission
+        android:name="org.mozilla.fennec_nalexander_sync.permission.PER_ACCOUNT_TYPE"
+        android:protectionLevel="signature">
+    </permission>
+
+    <uses-permission android:name="org.mozilla.fennec_nalexander_sync.permission.PER_ACCOUNT_TYPE" />
+
+    <!-- A signature level permission specific to each Firefox version
+         (Android package name, e.g., org.mozilla.firefox).  Use this
+         permission to broadcast securely within a single Firefox
+         version.  This needs to agree with
+         GlobalConstants.PER_ANDROID_PACKAGE_PERMISSION.
+
+         This is not Sync-specific, but we don't have a better place
+         to put generic background service manifest snippets, so here
+         is expedient. -->
+    <permission
+        android:name="org.mozilla.fennec_nalexander.permission.PER_ANDROID_PACKAGE"
+        android:protectionLevel="signature"/>
+
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
+    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"/>
+    <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS"/>
+
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="org.mozilla.fennec_nalexander.permissions.PASSWORD_PROVIDER"/>
+    <uses-permission android:name="org.mozilla.fennec_nalexander.permissions.BROWSER_PROVIDER"/>
+    <uses-permission android:name="org.mozilla.fennec_nalexander.permissions.FORMHISTORY_PROVIDER"/>
+
+
+    <uses-feature android:name="android.hardware.location" android:required="false"/>
+    <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
+    <uses-feature android:name="android.hardware.touchscreen"/>
+
+    <!-- Contacts API -->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+
+    <!-- Android Beam support -->
+    <uses-permission android:name="android.permission.NFC"/>
+    <uses-feature android:name="android.hardware.nfc" android:required="false"/>
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-feature android:name="android.hardware.audio.low_latency" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.any" android:required="false"/>
+    <uses-feature android:name="android.hardware.microphone" android:required="false"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
+
+    <!-- App requires OpenGL ES 2.0 -->
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+
+    <application android:label="Fennec nalexander"
+		 android:icon="@drawable/icon"
+                 android:name="org.mozilla.gecko.GeckoApplication"
+		 android:hardwareAccelerated="true"
+		 android:debuggable="true">
+
+        <activity android:name=".App"
+                  android:label="Fennec nalexander"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.UPDATE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <!-- Default browser intents -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:scheme="about" />
+                <data android:scheme="javascript" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="file" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:mimeType="text/html"/>
+                <data android:mimeType="text/plain"/>
+                <data android:mimeType="application/xhtml+xml"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.WEB_SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+            </intent-filter>
+
+            <meta-data android:name="android.app.searchable"
+                       android:resource="@xml/searchable" />
+
+            <!-- For debugging -->
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.DEBUG" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".WebApp"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+        <!-- Declare a predefined number of WebApp<num> activities. These are
+             used so that each web app can launch in its own process. Keep
+             this number in sync with the total number of web apps handled in
+             WebAppAllocator. -->
+
+        <activity android:name=".WebApps$WebApp0"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP0"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp0"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP0" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp1"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP1"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp1"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP1" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp2"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP2"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp2"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP2" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp3"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP3"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp3"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP3" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp4"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP4"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp4"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP4" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp5"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP5"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp5"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP5" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp6"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP6"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp6"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP6" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp7"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP7"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp7"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP7" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp8"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP8"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp8"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP8" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp9"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP9"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp9"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP9" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp10"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP10"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp10"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP10" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp11"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP11"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp11"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP11" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp12"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP12"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp12"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP12" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp13"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP13"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp13"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP13" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp14"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP14"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp14"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP14" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp15"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP15"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp15"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP15" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp16"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP16"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp16"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP16" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp17"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP17"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp17"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP17" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp18"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP18"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp18"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP18" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp19"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP19"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp19"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP19" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp20"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP20"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp20"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP20" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp21"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP21"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp21"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP21" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp22"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP22"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp22"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP22" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp23"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP23"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp23"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP23" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp24"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP24"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp24"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP24" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp25"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP25"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp25"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP25" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp26"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP26"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp26"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP26" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp27"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP27"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp27"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP27" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp28"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP28"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp28"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP28" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp29"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP29"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp29"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP29" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp30"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP30"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp30"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP30" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp31"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP31"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp31"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP31" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp32"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP32"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp32"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP32" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp33"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP33"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp33"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP33" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp34"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP34"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp34"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP34" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp35"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP35"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp35"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP35" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp36"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP36"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp36"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP36" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp37"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP37"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp37"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP37" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp38"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP38"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp38"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP38" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp39"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP39"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp39"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP39" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp40"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP40"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp40"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP40" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp41"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP41"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp41"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP41" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp42"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP42"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp42"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP42" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp43"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP43"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp43"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP43" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp44"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP44"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp44"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP44" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp45"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP45"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp45"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP45" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp46"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP46"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp46"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP46" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp47"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP47"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp47"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP47" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp48"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP48"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp48"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP48" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp49"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP49"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp49"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP49" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp50"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP50"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp50"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP50" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp51"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP51"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp51"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP51" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp52"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP52"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp52"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP52" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp53"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP53"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp53"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP53" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp54"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP54"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp54"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP54" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp55"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP55"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp55"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP55" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp56"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP56"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp56"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP56" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp57"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP57"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp57"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP57" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp58"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP58"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp58"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP58" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp59"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP59"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp59"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP59" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp60"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP60"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp60"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP60" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp61"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP61"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp61"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP61" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp62"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP62"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp62"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP62" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp63"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP63"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp63"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP63" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp64"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP64"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp64"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP64" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp65"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP65"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp65"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP65" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp66"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP66"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp66"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP66" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp67"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP67"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp67"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP67" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp68"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP68"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp68"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP68" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp69"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP69"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp69"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP69" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp70"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP70"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp70"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP70" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp71"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP71"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp71"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP71" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp72"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP72"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp72"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP72" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp73"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP73"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp73"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP73" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp74"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP74"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp74"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP74" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp75"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP75"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp75"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP75" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp76"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP76"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp76"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP76" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp77"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP77"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp77"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP77" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp78"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP78"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp78"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP78" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp79"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP79"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp79"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP79" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp80"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP80"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp80"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP80" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp81"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP81"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp81"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP81" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp82"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP82"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp82"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP82" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp83"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP83"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp83"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP83" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp84"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP84"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp84"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP84" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp85"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP85"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp85"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP85" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp86"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP86"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp86"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP86" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp87"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP87"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp87"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP87" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp88"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP88"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp88"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP88" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp89"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP89"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp89"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP89" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp90"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP90"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp90"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP90" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp91"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP91"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp91"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP91" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp92"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP92"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp92"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP92" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp93"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP93"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp93"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP93" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp94"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP94"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp94"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP94" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp95"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP95"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp95"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP95" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp96"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP96"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp96"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP96" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp97"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP97"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp97"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP97" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp98"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP98"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp98"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP98" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".WebApps$WebApp99"
+                  android:label="@string/webapp_generic_name"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                  android:windowSoftInputMode="stateUnspecified|adjustResize"
+                  android:launchMode="singleTask"
+                  android:taskAffinity="org.mozilla.gecko.WEBAPP99"
+                  android:process=":org.mozilla.fennec_nalexander.WebApp99"
+                  android:excludeFromRecents="true"
+                  android:theme="@style/Gecko.App">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.WEBAPP99" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.ACTION_ALERT_CALLBACK" />
+            </intent-filter>
+        </activity>
+
+
+        <!-- Masquerade as the Resolver so that we can be opened from the Marketplace. -->
+        <activity-alias
+            android:name="com.android.internal.app.ResolverActivity"
+            android:targetActivity=".App"
+            android:exported="true" />
+
+        <receiver android:name="org.mozilla.gecko.GeckoUpdateReceiver">
+            <intent-filter>
+                <action android:name="org.mozilla.fennec_nalexander.CHECK_UPDATE_RESULT" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="org.mozilla.gecko.GeckoMessageReceiver"
+                  android:permission="org.mozilla.fennec_nalexander.permissions.PASSWORD_PROVIDER">
+            <intent-filter>
+                  <action android:name="org.mozilla.gecko.INIT_PW"></action>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="org.mozilla.gecko.ReferrerReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name="org.mozilla.gecko.Restarter"
+                  android:process="org.mozilla.fennec_nalexanderRestarter"
+                  android:noHistory="true"
+                  android:theme="@style/Gecko">
+          <intent-filter>
+            <action android:name="org.mozilla.gecko.restart"/>
+            <action android:name="org.mozilla.gecko.restart_update"/>
+          </intent-filter>
+        </activity>
+
+        <!--
+             As well as these system actions, we also listen for pref notifications
+             sent by Fennec: org.mozilla.fennec_nalexander.ANNOUNCEMENTS_PREF.
+          -->
+        <receiver android:name="org.mozilla.gecko.background.announcements.AnnouncementsBroadcastReceiver" >
+            <intent-filter>
+                <!-- Startup. -->
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <!-- SD card remounted. -->
+                <action android:name="android.intent.action.EXTERNAL_APPLICATIONS_AVAILABLE" />
+            </intent-filter>
+            <intent-filter >
+              <action android:name="org.mozilla.fennec_nalexander.ANNOUNCEMENTS_PREF" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:exported="true"
+            android:name="org.mozilla.gecko.fxa.authenticator.FxAccountAuthenticatorService" >
+            <intent-filter >
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/fxaccount_authenticator" />
+        </service>
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.fxa.sync.FxAccountBookmarksSyncService" >
+            <intent-filter >
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/fxaccount_bookmarks_syncadapter" />
+        </service>
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.fxa.sync.FxAccountHistorySyncService" >
+            <intent-filter >
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/fxaccount_history_syncadapter" />
+        </service>
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.fxa.sync.FxAccountPasswordsSyncService" >
+            <intent-filter >
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/fxaccount_passwords_syncadapter" />
+        </service>
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.fxa.sync.FxAccountTabsSyncService" >
+            <intent-filter >
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/fxaccount_tabs_syncadapter" />
+        </service>
+        <activity
+            android:theme="@style/SyncTheme"
+            android:icon="@drawable/icon"
+            android:label="@string/sync_app_name"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
+            android:taskAffinity="org.mozilla.gecko.sync.setup"
+            android:name="org.mozilla.gecko.sync.setup.activities.SetupSyncActivity" >
+            <!-- android:configChanges: SetupSyncActivity will handle orientation changes; no longer restarts activity (default) -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <!-- Adding a launcher will make Firefox Sync appear
+                     on the Apps screen, which we only want when testing. -->
+                <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            </intent-filter>
+        </activity>
+
+        <!-- On tablets, SyncTheme is in a dialog, which is not what
+             we want for install instructions. -->
+        <activity
+            android:theme="@style/Gecko"
+            android:name="org.mozilla.gecko.sync.setup.activities.WebViewActivity" />
+
+        <activity
+            android:theme="@style/SyncTheme"
+            android:clearTaskOnLaunch="true"
+            android:name="org.mozilla.gecko.sync.setup.activities.AccountActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+
+        <activity
+            android:theme="@style/SyncTheme"
+            android:clearTaskOnLaunch="true"
+            android:name="org.mozilla.gecko.sync.setup.activities.RedirectToSetupActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+
+        <!-- Secondary Sync activities. These depend on other activities for context
+             (display a result, or a next step). Since these don't make sense as stand-alone
+             activities, set excludeFromRecents="true" -->
+        <activity
+            android:theme="@style/SyncTheme"
+            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:name="org.mozilla.gecko.sync.setup.activities.SetupFailureActivity" />
+
+        <activity
+            android:theme="@style/SyncTheme"
+            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:name="org.mozilla.gecko.sync.setup.activities.SetupSuccessActivity" />
+
+        <activity
+            android:theme="@style/SyncTheme"
+            android:excludeFromRecents="true"
+            android:taskAffinity="org.mozilla.gecko.sync.setup"
+            android:name="org.mozilla.gecko.sync.config.activities.SelectEnginesActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+         </activity>
+
+        <receiver
+            android:name="org.mozilla.gecko.sync.receivers.UpgradeReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="org.mozilla.gecko.sync.receivers.SyncAccountDeletedReceiver"
+            android:permission="org.mozilla.fennec_nalexander_sync.permission.PER_ACCOUNT_TYPE">
+            <intent-filter>
+                <!-- This needs to be kept the same as
+                     GlobalConstants.SYNC_ACCOUNT_DELETED_ACTION. -->
+                <action android:name="org.mozilla.fennec_nalexander_sync.accounts.SYNC_ACCOUNT_DELETED_ACTION"/>
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:theme="@style/SyncTheme"
+            android:excludeFromRecents="true"
+            android:icon="@drawable/icon"
+            android:label="@string/sync_app_name"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:taskAffinity="org.mozilla.gecko.sync.setup"
+            android:name="org.mozilla.gecko.sync.setup.activities.SendTabActivity" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/*" />
+            </intent-filter>
+        </activity>
+        <provider android:name="org.mozilla.gecko.background.healthreport.HealthReportProvider"
+                  android:authorities="org.mozilla.fennec_nalexander.health"
+                  android:permission="org.mozilla.fennec_nalexander.permissions.HEALTH_PROVIDER">
+        </provider>
+
+        <!-- BroadcastReceiver is a thin receiver whose purpose is to
+             start the background service in response to external events,
+             some sent by the system and some particular to Health Report.
+          -->
+        <receiver android:name="org.mozilla.gecko.background.healthreport.HealthReportBroadcastReceiver" >
+            <intent-filter>
+                <!-- Startup. -->
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+            <intent-filter>
+                <!-- SD card remounted. -->
+                <action android:name="android.intent.action.EXTERNAL_APPLICATIONS_AVAILABLE" />
+            </intent-filter>
+            <intent-filter >
+                <!-- Toggle Health Report upload service alarm (based on preferences value) -->
+                <action android:name="org.mozilla.fennec_nalexander.HEALTHREPORT_UPLOAD_PREF" />
+            </intent-filter>
+            <intent-filter >
+                <!-- Enable Health Report prune service alarm -->
+                <action android:name="org.mozilla.fennec_nalexander.HEALTHREPORT_PRUNE" />
+            </intent-filter>
+        </receiver>
+
+
+        <activity android:name="org.mozilla.gecko.VideoPlayer"
+                  android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation"
+                  android:theme="@android:style/Theme.NoTitleBar">
+            <intent-filter>
+                <action android:name="org.mozilla.gecko.PLAY_VIDEO" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="org.mozilla.gecko.preferences.GeckoPreferences"
+                  android:theme="@style/Gecko.Preferences"
+                  android:label="@string/settings_title"
+                  android:configChanges="orientation|screenSize"
+                  android:excludeFromRecents="true"/>
+
+        <provider android:name="org.mozilla.gecko.db.BrowserProvider"
+                  android:authorities="org.mozilla.fennec_nalexander.db.browser"
+                  android:permission="org.mozilla.fennec_nalexander.permissions.BROWSER_PROVIDER">
+
+            <path-permission android:pathPrefix="/search_suggest_query"
+                             android:readPermission="android.permission.GLOBAL_SEARCH" />
+
+        </provider>
+
+        <!--
+          Ensure that passwords provider runs in its own process. (Bug 718760.)
+          Process name is per-application to avoid loading CPs from multiple
+          Fennec versions into the same process. (Bug 749727.)
+          Process name is a mangled version to avoid a Talos bug. (Bug 750548.)
+          -->
+        <provider android:name="org.mozilla.gecko.db.PasswordsProvider"
+                  android:label="@string/sync_configure_engines_title_passwords"
+                  android:authorities="org.mozilla.fennec_nalexander.db.passwords"
+                  android:permission="org.mozilla.fennec_nalexander.permissions.PASSWORD_PROVIDER"
+                  android:process="org.mozilla.f3nn3c_nalexander.PasswordsProvider"/>
+
+        <provider android:name="org.mozilla.gecko.db.FormHistoryProvider"
+                  android:label="@string/sync_configure_engines_title_history"
+                  android:authorities="org.mozilla.fennec_nalexander.db.formhistory"
+                  android:permission="org.mozilla.fennec_nalexander.permissions.FORMHISTORY_PROVIDER"
+                  android:protectionLevel="signature"/>
+
+        <provider android:name="org.mozilla.gecko.db.TabsProvider"
+                  android:label="@string/sync_configure_engines_title_tabs"
+                  android:authorities="org.mozilla.fennec_nalexander.db.tabs"
+                  android:permission="org.mozilla.fennec_nalexander.permissions.BROWSER_PROVIDER"/>
+
+        <provider android:name="org.mozilla.gecko.db.HomeListsProvider"
+                  android:authorities="org.mozilla.fennec_nalexander.db.homelists"
+                  android:permission="org.mozilla.fennec_nalexander.permissions.BROWSER_PROVIDER"/>
+
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.updater.UpdateService"
+            android:process="org.mozilla.f3nn3c_nalexander.UpdateService">
+        </service>
+
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.NotificationService">
+        </service>
+
+
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.background.announcements.AnnouncementsService" >
+        </service>
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.background.announcements.AnnouncementsBroadcastService" >
+        </service>
+        <!-- BroadcastService responds to external events and starts
+             the other background services. We don't export any of
+             these services, since they are only started by components
+             internal to the Fennec package.
+          -->
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.background.healthreport.HealthReportBroadcastService" >
+        </service>
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.background.healthreport.upload.HealthReportUploadService" >
+        </service>
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.background.healthreport.prune.HealthReportPruneService" >
+        </service>
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.sync.setup.SyncAuthenticatorService" >
+            <intent-filter >
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/sync_authenticator" />
+        </service>
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.sync.syncadapter.SyncService" >
+            <intent-filter >
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync_syncadapter" />
+        </service>
+        <service
+            android:exported="false"
+            android:name="org.mozilla.gecko.sync.receivers.SyncAccountDeletedService" >
+        </service>
+
+    </application>
+
+    <permission android:name="org.mozilla.fennec_nalexander.permissions.BROWSER_PROVIDER"
+                android:protectionLevel="signature"/>
+
+    <permission android:name="org.mozilla.fennec_nalexander.permissions.PASSWORD_PROVIDER"
+                android:protectionLevel="signature"/>
+
+    <permission android:name="org.mozilla.fennec_nalexander.permissions.FORMHISTORY_PROVIDER"
+                android:protectionLevel="signature"/>
+
+</manifest> 

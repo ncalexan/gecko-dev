@@ -1,0 +1,165 @@
+topobjdir = '../../../../objdir-droid' // XXX
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.7.3'
+    }
+}
+
+apply plugin: 'android'
+
+dependencies {
+    compile files('/usr/local/Cellar/android-sdk/22.3/extras/android/support/v4/android-support-v4.jar') // XXX
+}
+
+dependencies {
+    // compile project(':libraries:background')
+    compile project(':libraries:geckoview')
+    // compile project(':libraries:fennec')
+}
+
+android {
+    compileSdkVersion 16
+    buildToolsVersion '17.0.0'
+
+    // defaultConfig {
+    //     packageName 'org.mozilla.gecko'
+    // }
+
+    lintOptions {
+        // if true, stop the gradle build if errors are found
+        abortOnError false
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile "AndroidManifest.xml" // "$topobjdir/mobile/android/base/AndroidManifest.xml"
+
+            assets.srcDirs = [
+                "$topobjdir/dist/fennec/assets"
+            ]
+
+            // java {
+            //   srcDirs = [
+            //     '../mobile/android/thirdparty',
+            //     '../mobile/android/base',
+            //     '../mobile/android/base/mozglue',
+            //     '../mobile/android/base/util',
+            //     'mobile/android/base/generated',
+            //   ]
+            //   exclude '**/CrashReporter.java'
+            //   exclude 'tests/**'
+            // }
+            // // resources.srcDirs = ['src']
+            // // aild.srcDirs = ['src']
+            // // renderscript.srcDirs = ['src']
+            // res.srcDirs = [
+            //     '../mobile/android/base/resources',
+            //     'mobile/android/base/res',
+            //     '../mobile/android/branding/unofficial/res',
+            //     '../mobile/android/base/crashreporter/res',
+            // ]
+        }
+
+        // instrumentTest.setRoot('tests')
+    }
+}
+
+// From http://stackoverflow.com/a/20753747
+task copyNativeLibs(type: Copy) {
+    from(new File("$topobjdir/dist/fennec/lib")) { include '**/*.so' }
+    into new File(buildDir, 'native-libs')
+}
+
+tasks.withType(Compile) { compileTask -> compileTask.dependsOn copyNativeLibs }
+
+clean.dependsOn 'cleanCopyNativeLibs'
+
+tasks.withType(com.android.build.gradle.tasks.PackageApplication) { pkgTask ->
+    pkgTask.jniFolders = new HashSet<File>()
+    pkgTask.jniFolders.add(new File(buildDir, 'native-libs'))
+}
+
+// tasks.withType(com.android.build.gradle.tasks.PackageApplication) { pkgTask ->
+//     pkgTask.jniFolders = new HashSet<File>()
+//     pkgTask.jniFolders.add(new File("$topobjdir/dist/fennec/lib"))
+// }
+
+// lint.enabled = false
+
+
+// From https://groups.google.com/forum/#!msg/adt-dev/SOs6mxZGjMM/pdRQaA7tyEkJ
+// /////////////
+// // NDK Support
+// //////////////
+// // If using this, Android studio will fail run the following to set the environment variable for android studio:
+// // export ANDROID_NDK_HOME=/Android/android-ndk-r8e (Linux)
+// // launchctl setenv ANDROID_NDK_HOME /Android/android-ndk-r8e (Mac)
+// // or, better, add the export to the .profile of your user home and re-login
+// task copyNativeLibs(type: Copy, dependsOn: 'buildNative') {
+//     from(new File('src/main/libs')) { include '**/*.so' }
+//     into new File(buildDir, 'native-libs')
+// }
+
+// // TODO fix deprecated
+// tasks.withType(JavaCompile) { compileTask -> compileTask.dependsOn copyNativeLibs }
+
+// clean.dependsOn 'cleanCopyNativeLibs'
+
+// tasks.withType(com.android.build.gradle.tasks.PackageApplication) { pkgTask ->
+//     pkgTask.jniDir new File(buildDir, 'native-libs')
+// }
+
+// task buildNative(type: Exec) {
+//     def ndkBuild;
+//     def ndkBuildingDir = new File("src/main");
+// //    def ndkSourcesDir = new File(ndkBuildingDir, "jni")
+// //    def ndkOutputDir = new File(buildDir, 'native-libs')
+//     def hasNdk = false;
+//     if (System.env.ANDROID_NDK_HOME != null) {
+//         hasNdk = true;
+//         ndkBuild = new File(System.env.ANDROID_NDK_HOME, 'ndk-build')
+//     }
+
+// //    inputs.files fileTree(ndkSourcesDir)
+// //    outputs.dir ndkOutputDir
+//     commandLine ndkBuild, "--directory", ndkBuildingDir
+
+//     doFirst {
+//         if (!hasNdk) {
+//             logger.error('##################')
+//             logger.error("Failed NDK build")
+//             logger.error('Reason: Reason: ANDROID_NDK_HOME not set.')
+//             logger.error('##################')
+//         }
+//         assert hasNdk : "ANDROID_NDK_HOME not set."
+//     }
+// }
+
+// task cleanNative(type: Exec) {
+//     def ndkBuild;
+//     def ndkBuildingDir = new File("src/main");
+//     def hasNdk = false;
+//     if (System.env.ANDROID_NDK_HOME != null) {
+//         hasNdk = true;
+//         ndkBuild = new File(System.env.ANDROID_NDK_HOME, 'ndk-build')
+//     }
+
+//     commandLine ndkBuild, "--directory", ndkBuildingDir, "clean"
+
+//     doFirst {
+//         if (!hasNdk) {
+//             logger.error('##################')
+//             logger.error("Failed NDK build")
+//             logger.error('Reason: Reason: ANDROID_NDK_HOME not set.')
+//             logger.error('##################')
+//         }
+//         assert hasNdk : "ANDROID_NDK_HOME not set."
+//     }
+// }
+
+// clean.dependsOn 'cleanNative'

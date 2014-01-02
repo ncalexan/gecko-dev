@@ -1,0 +1,67 @@
+topsrcdir = '../../../../..' // XXX
+topobjdir = '../../../../../objdir-droid' // XXX
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.7.3'
+    }
+}
+
+apply plugin: 'android-library'
+
+dependencies {
+    compile files('/usr/local/Cellar/android-sdk/22.3/extras/android/support/v4/android-support-v4.jar') // XXX
+}
+
+// dependencies {
+//     compile project(':libraries:background')
+//     compile project(':libraries:geckoview')
+//     compile project(':libraries:fennec')
+// }
+
+android {
+    compileSdkVersion 16
+    buildToolsVersion '17.0.0'
+
+    defaultConfig {
+        packageName 'org.mozilla.gecko'
+    }
+
+    lintOptions {
+        // if true, stop the gradle build if errors are found
+        abortOnError false
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile "AndroidManifest.xml"
+            java {
+              srcDirs = [
+                "$topsrcdir/mobile/android/thirdparty",
+                "$topsrcdir/mobile/android/base",
+                "$topobjdir/mobile/android/base/generated",
+              ]
+              exclude '**/CrashReporter.java'
+              exclude 'tests/**'
+            }
+            // resources.srcDirs = ['src']
+            // aild.srcDirs = ['src']
+            // renderscript.srcDirs = ['src']
+            res.srcDirs = [
+                "$topobjdir/mobile/android/base/res",
+                "$topsrcdir/mobile/android/base/resources",
+                "$topsrcdir/mobile/android/branding/unofficial/res",
+                // "$topsrcdir/mobile/android/base/crashreporter/res",
+            ]
+            // assets.srcDirs = ['assets']
+        }
+
+        // instrumentTest.setRoot('tests')
+    }
+}
+
+// lint.enabled = false
