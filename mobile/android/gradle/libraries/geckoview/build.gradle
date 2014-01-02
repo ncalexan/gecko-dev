@@ -1,6 +1,8 @@
 topsrcdir = '../../../../..' // XXX
 topobjdir = '../../../../../objdir-droid' // XXX
 
+buildDir = "$topobjdir/mobile/android/gradle/libraries/geckoview/build"
+
 buildscript {
     repositories {
         mavenCentral()

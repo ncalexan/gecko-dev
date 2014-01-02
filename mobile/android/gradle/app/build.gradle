@@ -1,4 +1,5 @@
 topobjdir = '../../../../objdir-droid' // XXX
+buildDir = "$topobjdir/mobile/android/gradle/app/build"
 
 buildscript {
     repositories {
