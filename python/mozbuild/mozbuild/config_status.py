@@ -16,6 +16,7 @@ from optparse import OptionParser
 
 from mach.logging import LoggingManager
 from mozbuild.backend.configenvironment import ConfigEnvironment
+from mozbuild.backend.android_eclipse import AndroidEclipseBackend
 from mozbuild.backend.recursivemake import RecursiveMakeBackend
 from mozbuild.frontend.emitter import TreeMetadataEmitter
 from mozbuild.frontend.reader import BuildReader
@@ -104,3 +105,14 @@ def config_status(topobjdir='.', topsrcdir='.',
     if options.diff:
         for path, diff in sorted(summary.file_diffs.items()):
             print(diff)
+
+    print('Reticulating Android Eclipse splines...', file=sys.stderr)
+
+    reader = BuildReader(env)
+    emitter = TreeMetadataEmitter(env)
+    android_eclipse_backend = AndroidEclipseBackend(env)
+    definitions = emitter.emit(reader.read_topsrcdir())
+    summary = android_eclipse_backend.consume(definitions)
+
+    for line in summary.summaries():
+        print(line, file=sys.stderr)
