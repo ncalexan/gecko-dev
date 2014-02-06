@@ -257,10 +257,14 @@ class FileCopier(FileRegistry):
                 for d in dirs:
                     full = os.path.join(root, d)
                     st = os.lstat(full)
+                    will_be_recreated = full in dest_files
                     if stat.S_ISLNK(st.st_mode):
-                        os.remove(full)
-                        # We don't need to recreate it because the code above
-                        # would have created it as necessary.
+                        if will_be_recreated:
+                            existing_files.add(os.path.normpath(os.path.join(root, d)))
+                        else:
+                            os.remove(full)
+                            # We don't need to recreate it because the code above
+                            # would have created it as necessary.
                     else:
                         filtered.append(d)
 
