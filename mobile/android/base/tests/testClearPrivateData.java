@@ -107,7 +107,7 @@ public class testClearPrivateData extends PixelTest {
 
     //Verify if there are settings to be clear if so clear them from the URL bar context menu
     public void checkOption(String option, String button) {
-        final View toolbarView = mSolo.getView("browser_toolbar");
+        final View toolbarView = mSolo.getView(R.id.browser_toolbar);
         mSolo.clickLongOnView(toolbarView);
         mAsserter.ok(waitForText(StringHelper.CONTEXT_MENU_ITEMS_IN_URL_BAR[2]), "Waiting for the pop-up to open", "Pop up was openend");
         mSolo.clickOnText(StringHelper.CONTEXT_MENU_ITEMS_IN_URL_BAR[2]);
