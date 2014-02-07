@@ -162,6 +162,7 @@ public class testBrowserProvider extends ContentProviderTest {
         mAsserter.is(c.moveToFirst(), true, "Mobile bookmarks folder is present");
 
         mMobileFolderId = c.getLong(c.getColumnIndex(mBookmarksIdCol));
+        c.close();
     }
 
     private void ensureEmptyDatabase() throws Exception {
