@@ -16,20 +16,29 @@ endif #} JAVAFILES
 
 
 ifdef ANDROID_APK_NAME #{
-android_res_dirs := $(addprefix $(srcdir)/,$(or $(ANDROID_RES_DIRS),res))
+android_res_dirs := $(or $(ANDROID_RES_DIRS),$(srcdir)/res)
 _ANDROID_RES_FLAG := $(addprefix -S ,$(android_res_dirs))
 _ANDROID_ASSETS_FLAG := $(addprefix -A ,$(ANDROID_ASSETS_DIR))
 android_manifest := $(or $(ANDROID_MANIFEST_FILE),AndroidManifest.xml)
 
 GENERATED_DIRS += classes
 
+JAVA_JAR_TARGETS += R
+R_DEST := $(ANDROID_APK_NAME)-R.jar
+R_PP_JAVAFILES := R.java
+
+ANDROID_EXTRA_JARS := $(ANDROID_EXTRA_JARS) \
+  $(if $(filter $(ANDROID_APK_NAME)-R.jar,$(ANDROID_EXTRA_JARS)),,$(ANDROID_APK_NAME)-R.jar) \
+  $(NULL)
+
 classes.dex: $(call mkdir_deps,classes)
-classes.dex: R.java
+classes.dex: $(ANDROID_APK_NAME)-R.jar
 classes.dex: $(ANDROID_APK_NAME).ap_
 classes.dex: $(ANDROID_EXTRA_JARS)
 classes.dex: $(JAVAFILES)
-	$(JAVAC) $(JAVAC_FLAGS) -d classes $(filter %.java,$^) \
-		$(if $(strip $(ANDROID_EXTRA_JARS)),-classpath $(subst $(NULL) ,:,$(strip $(ANDROID_EXTRA_JARS))))
+	$(if $(filter %.java,$^),\
+		$(JAVAC) $(JAVAC_FLAGS) -d classes $(filter %.java,$^) \
+			$(if $(strip $(JAVA_CLASSPATH) $(ANDROID_EXTRA_JARS)),-classpath $(subst $(NULL) ,:,$(strip $(JAVA_CLASSPATH) $(ANDROID_EXTRA_JARS)))))
 	$(DX) --dex --output=$@ classes $(ANDROID_EXTRA_JARS)
 
 # R.java and $(ANDROID_APK_NAME).ap_ are both produced by aapt.  To
@@ -48,6 +57,8 @@ android_res_files := $(wildcard $(addsuffix /*,$(wildcard $(addsuffix /*,$(andro
 .aapt.deps: $(android_manifest) $(android_res_files) $(wildcard $(ANDROID_ASSETS_DIR))
 	@$(TOUCH) $@
 	$(AAPT) package -f -M $< -I $(ANDROID_SDK)/android.jar $(_ANDROID_RES_FLAG) $(_ANDROID_ASSETS_FLAG) \
+		--auto-add-overlay \
+		--non-constant-id \
 		-J ${@D} \
 		-F $(ANDROID_APK_NAME).ap_
 

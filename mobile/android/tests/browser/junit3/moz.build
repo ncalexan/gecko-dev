@@ -18,6 +18,9 @@ jar.sources += [
     'src/tests/TestTopSitesCursorWrapper.java',
 ]
 jar.generated_sources = [] # None yet -- try to keep it this way.
+jar.extra_jars += [
+    'browser-junit3-debug-R.jar', # Resources.
+]
 jar.javac_flags += ['-Xlint:all,-unchecked']
 
 # Android Eclipse project.

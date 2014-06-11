@@ -3,6 +3,8 @@
 
 package org.mozilla.gecko.browser.tests;
 
+import org.mozilla.gecko.browser.tests.R;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.test.mock.MockContext;
@@ -63,5 +65,7 @@ public class TestRawResource extends BrowserTestCase {
         }
 
         assertEquals(RAW_CONTENTS, result);
+
+        System.out.println("app_name: " + R.string.app_name);
     }
 }
