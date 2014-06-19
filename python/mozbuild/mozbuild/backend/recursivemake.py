@@ -1100,18 +1100,31 @@ INSTALL_TARGETS += %(prefix)s
         # manifests for all projects live in $TOPOBJDIR/android_eclipse
         # and are installed into subdirectories thereof.
 
-        project_directory = mozpath.join(self.environment.topobjdir, 'android_eclipse', project.name)
-        manifest_path = mozpath.join(self.environment.topobjdir, 'android_eclipse', '%s.manifest' % project.name)
-
         fragment = Makefile()
         rule = fragment.create_rule(targets=['ANDROID_ECLIPSE_PROJECT_%s' % project.name])
         rule.add_dependencies(project.recursive_make_targets)
+
+        project_directory = mozpath.join(self.environment.topobjdir, 'android_eclipse', project.name)
+        manifest_path = mozpath.join(self.environment.topobjdir, 'android_eclipse', '%s.manifest' % project.name)
         args = ['--no-remove',
             '--no-remove-all-directory-symlinks',
             '--no-remove-empty-directories',
             project_directory,
             manifest_path]
         rule.add_commands(['$(call py_action,process_install_manifest,%s)' % ' '.join(args)])
+
+        rule = fragment.create_rule(targets=['ANDROID_STUDIO_PROJECT_%s' % project.name])
+        rule.add_dependencies(project.recursive_make_targets)
+
+        project_directory = mozpath.join(self.environment.topobjdir, 'android_studio', project.name)
+        manifest_path = mozpath.join(self.environment.topobjdir, 'android_studio', '%s.manifest' % project.name)
+        args = ['--no-remove',
+            '--no-remove-all-directory-symlinks',
+            '--no-remove-empty-directories',
+            project_directory,
+            manifest_path]
+        rule.add_commands(['$(call py_action,process_install_manifest,%s)' % ' '.join(args)])
+
         fragment.dump(backend_file.fh, removal_guard=False)
 
     def _process_shared_library(self, libdef, backend_file):
