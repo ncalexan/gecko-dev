@@ -351,6 +351,7 @@ UPLOAD_EXTRA_FILES += fennec_ids.txt
 UPLOAD_EXTRA_FILES += geckoview_library/geckoview_library.zip
 UPLOAD_EXTRA_FILES += geckoview_library/geckoview_assets.zip
 UPLOAD_EXTRA_FILES += ../embedding/android/geckoview_example/geckoview_example.apk
+UPLOAD_EXTRA_FILES += search-activity.apk
 
 # Robocop/Robotium tests, Android Background tests, and Fennec need to
 # be signed with the same key, which means release signing them all.
@@ -387,6 +388,10 @@ endif
 
 # Create geckoview_library/geckoview_{assets,library}.zip for third-party GeckoView consumers.
 ifdef NIGHTLY_BUILD
+SEARCH_ACTIVITY_PATH = $(abspath $(_ABS_DIST)/../mobile/android/search)
+INNER_SEARCH_ACTIVITY_PACKAGE= \
+  $(call RELEASE_SIGN_ANDROID_APK,$(SEARCH_ACTIVITY_PATH)/search-activity-debug-unsigned-unaligned.apk,$(_ABS_DIST)/search-activity.apk)
+
 ifndef MOZ_DISABLE_GECKOVIEW
 INNER_MAKE_GECKOVIEW_LIBRARY= \
   $(MAKE) -C ../mobile/android/geckoview_library package
@@ -397,6 +402,7 @@ INNER_MAKE_GECKOVIEW_LIBRARY=echo 'GeckoView library packaging is disabled'
 INNER_MAKE_GECKOVIEW_EXAMPLE=echo 'GeckoView example packaging is disabled'
 endif
 else
+INNER_SEARCH_ACTIVITY_PACKAGE=echo 'Android Search Activity packaging is only enabled on Nightly'
 INNER_MAKE_GECKOVIEW_LIBRARY=echo 'GeckoView library packaging is only enabled on Nightly'
 INNER_MAKE_GECKOVIEW_EXAMPLE=echo 'GeckoView example packaging is only enabled on Nightly'
 endif
@@ -480,6 +486,7 @@ INNER_MAKE_PACKAGE	= \
   $(INNER_ROBOCOP_PACKAGE) && \
   $(INNER_BACKGROUND_TESTS_PACKAGE) && \
   $(INNER_BROWSER_TESTS_PACKAGE) && \
+  $(INNER_SEARCH_ACTIVITY_PACKAGE) && \
   $(INNER_MAKE_GECKOVIEW_LIBRARY) && \
   $(INNER_MAKE_GECKOVIEW_EXAMPLE)
 

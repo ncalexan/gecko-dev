@@ -1,0 +1,4 @@
+        <service
+            android:name="org.mozilla.search.SearchService"
+            android:exported="false">
+        </service>
