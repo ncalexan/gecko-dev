@@ -559,6 +559,10 @@ if '-march=armv7' in CONFIG['OS_CFLAGS']:
 else:
     DEFINES['MOZ_MIN_CPU_VERSION'] = 5
 
+if CONFIG['MOZ_ANDROID_SEARCH_ACTIVITY']:
+    ANDROID_RES_DIRS += [ SRCDIR + '/../search/res' ]
+    resjar.generated_sources += ['org/mozilla/search/R.java']
+
 generated_recursive_make_targets = ['.aapt.deps', '.locales.deps'] # Captures dependencies on Android manifest and all resources.
 
 generated = add_android_eclipse_library_project('FennecResourcesGenerated')
