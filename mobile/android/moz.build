@@ -9,6 +9,7 @@ CONFIGURE_SUBST_FILES += ['installer/Makefile']
 DIRS += [
     '../locales',
     'locales',
+    'search', # Conditional -- see below.
     'base',
     'chrome',
     'components',
@@ -19,6 +20,9 @@ DIRS += [
     'geckoview_library',
     'extensions',
 ]
+
+if not CONFIG['MOZ_ANDROID_SEARCH_ACTIVITY']:
+    DIRS.remove('search')
 
 if not CONFIG['LIBXUL_SDK']:
     PARALLEL_DIRS += ['../../xulrunner/tools/redit']
