@@ -415,6 +415,13 @@ ASSET_SO_LIBRARIES := $(addprefix assets/,$(filter-out libmozglue.so $(MOZ_CHILD
 DIST_FILES := $(filter-out $(SO_LIBRARIES),$(DIST_FILES))
 NON_DIST_FILES += libmozglue.so $(MOZ_CHILD_PROCESS_NAME) $(ASSET_SO_LIBRARIES)
 
+# These files are placed in the assets/ directory by packager.py and
+# then packed (without additional compression) into the assets
+# directory of the APK.
+ASSET_DIST_FILES := \
+  assets/example.cert \
+  $(NULL)
+
 ifdef MOZ_ENABLE_SZIP
 # These libraries are szipped in-place in the assets/ directory.
 SZIP_LIBRARIES := $(ASSET_SO_LIBRARIES)
@@ -469,6 +476,7 @@ INNER_MAKE_PACKAGE	= \
     unzip -o $(_ABS_DIST)/gecko.ap_ && \
     rm $(_ABS_DIST)/gecko.ap_ && \
     $(ZIP) $(if $(MOZ_ENABLE_SZIP),-0 )$(_ABS_DIST)/gecko.ap_ $(ASSET_SO_LIBRARIES) && \
+    $(if $(ASSET_DIST_FILES),$(ZIP) $(_ABS_DIST)/gecko.ap_ $(ASSET_DIST_FILES)) && \
     $(ZIP) -r9D $(_ABS_DIST)/gecko.ap_ $(DIST_FILES) -x $(NON_DIST_FILES) $(SZIP_LIBRARIES) && \
     $(if $(filter-out ./,$(OMNIJAR_DIR)), \
       mkdir -p $(OMNIJAR_DIR) && mv $(OMNIJAR_NAME) $(OMNIJAR_DIR) && ) \
