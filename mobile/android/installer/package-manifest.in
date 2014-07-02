@@ -89,6 +89,8 @@
 @BINPATH@/res/layout
 @BINPATH@/distribution/*
 
+@BINPATH@/example.cert
+
 [browser]
 ; [Base Browser Files]
 #ifndef XP_UNIX
