@@ -178,7 +178,8 @@ class AndroidStudioBackend(CommonBackend):
         manifest = InstallManifest()
 
         if project.manifest:
-            manifest.add_copy(mozpath.join(srcdir, project.manifest), 'src/main/AndroidManifest.xml')
+            manifest.add_copy(mozpath.join(srcdir, project.manifest), 'src/debug/AndroidManifest.xml')
+            manifest.add_copy(mozpath.join(srcdir, project.manifest), 'src/release/AndroidManifest.xml')
 
         if project.res:
             manifest.add_symlink(mozpath.join(srcdir, project.res), 'src/main/res')
@@ -249,6 +250,8 @@ class AndroidStudioBackend(CommonBackend):
 
         defines['IDE_PLUGIN'] = 'android-library' if data.is_library else 'android'
 
+        defines['IDE_VARIANTS'] = 'libraryVariants' if data.is_library else 'applicationVariants'
+
         defines['IDE_ORDERENTRY_MODULES'] = ''
         defines['IDE_DEPENDENCIES'] = ''
         for ref in sorted(data.included_projects):
@@ -297,9 +300,11 @@ class AndroidStudioBackend(CommonBackend):
             for key in reversed(sorted(defines.keys(), key=len)):
                 output_filename = output_filename.replace('@%s@' % key, defines[key])
 
-            if output_filename == 'src/main/AndroidManifest.xml' and not data.is_library:
-                # Main projects supply their own manifests.
-                continue
+            # Both main and library projects provide a stub manifest that lets
+            # the Gradle configuration step (pre-build!) complete successfully.
+            # For a main project, the real manifest is installed (into
+            # src/main/debug/) by the install manifest.  Android Studio
+            # recognizes this location by default.
             copier.add(output_filename, PreprocessedFile(
                 mozpath.join(finder.base, input_filename),
                 depfile_path=None,

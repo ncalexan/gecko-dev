@@ -42,3 +42,15 @@ dependencies {
     compile 'com.android.support:support-v4:19.+'
 @IDE_DEPENDENCIES@
 }
+
+task prepareObjDir(type:Exec) {
+  workingDir '@IDE_TOPOBJDIR@'
+
+  commandLine '@IDE_TOPSRCDIR@/mach'
+  args 'build'
+  args '@IDE_OBJDIR@/ANDROID_ECLIPSE_PROJECT_@IDE_PROJECT_NAME@'
+}
+
+android.@IDE_VARIANTS@.all { variant ->
+    variant.checkManifest.dependsOn prepareObjDir
+}
