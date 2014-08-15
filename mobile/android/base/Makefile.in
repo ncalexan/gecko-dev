@@ -408,6 +408,8 @@ $(abspath $(DIST)/fennec/$(OMNIJAR_NAME)): FORCE
 
 libs:: geckoview_resources.zip classes.dex jni-stubs.inc GeneratedJNIWrappers.cpp fennec_ids.txt
 	$(INSTALL) $(srcdir)/example.cert $(FINAL_TARGET)
+	$(RM) -rf $(FINAL_TARGET)/examples
+	$(INSTALL) $(srcdir)/examples $(FINAL_TARGET)
 	$(INSTALL) geckoview_resources.zip $(FINAL_TARGET)
 	$(INSTALL) classes.dex $(FINAL_TARGET)
 	@(diff jni-stubs.inc $(topsrcdir)/mozglue/android/jni-stubs.inc >/dev/null && diff GeneratedJNIWrappers.cpp $(topsrcdir)/widget/android/GeneratedJNIWrappers.cpp >/dev/null) || \

@@ -342,6 +342,11 @@ DIST_FILES += $(MOZ_CHILD_PROCESS_NAME)
 
 DIST_FILES += example.cert
 
+# This works because DIST_FILES here are not preprocessed; this is just fed into
+# the $(ZIP) command like a regular file.  (The $(ZIP) flags already preserve
+# directories.)
+DIST_FILES += examples
+
 GECKO_APP_AP_PATH = $(abspath $(DEPTH)/mobile/android/base)
 
 ifdef ENABLE_TESTS

@@ -93,6 +93,7 @@
 @BINPATH@/distribution/*
 
 @BINPATH@/example.cert
+@BINPATH@/examples/*
 
 [browser]
 ; [Base Browser Files]
