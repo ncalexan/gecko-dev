@@ -9,6 +9,7 @@ import java.util.Map;
 import org.mozilla.gecko.Actions;
 import org.mozilla.gecko.Assert;
 import org.mozilla.gecko.Driver;
+import org.mozilla.gecko.FennecInstrumentationTestRunner;
 import org.mozilla.gecko.FennecNativeActions;
 import org.mozilla.gecko.FennecNativeDriver;
 import org.mozilla.gecko.GeckoAppShell;
@@ -78,22 +79,6 @@ abstract class UITest extends BaseRobocopTest
         // Ensure Robocop tests have access to network, and are run with Display powered on.
         throwIfHttpGetFails();
         throwIfScreenNotOn();
-    }
-
-    @Override
-    public void tearDown() throws Exception {
-        try {
-            mAsserter.endTest();
-            // request a force quit of the browser and wait for it to take effect
-            GeckoAppShell.sendEventToGecko(GeckoEvent.createBroadcastEvent("Robocop:Quit", null));
-            mSolo.sleep(7000);
-            // if still running, finish activities as recommended by Robotium
-            mSolo.finishOpenedActivities();
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-
-        super.tearDown();
     }
 
     private void initComponents() {
@@ -181,23 +166,6 @@ abstract class UITest extends BaseRobocopTest
         return baseUrl + "/" + url.replaceAll("(^/)", "");
     }
 
-    private static Intent createActivityIntent(final Map<String, String> config) {
-        final Intent intent = new Intent(Intent.ACTION_MAIN);
-
-        final String profile = config.get("profile");
-        intent.putExtra("args", "-no-remote -profile " + profile);
-
-        final String envString = config.get("envvars");
-        if (!TextUtils.isEmpty(envString)) {
-            final String[] envStrings = envString.split(",");
-
-            for (int iter = 0; iter < envStrings.length; iter++) {
-                intent.putExtra("env" + iter, envStrings[iter]);
-            }
-        }
-
-        return intent;
-    }
 
     /**
      * Throws an Exception. Called from overridden JUnit methods to ensure JUnit assertions

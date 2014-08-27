@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import org.mozilla.gecko.Actions;
 import org.mozilla.gecko.Driver;
 import org.mozilla.gecko.Element;
+import org.mozilla.gecko.FennecInstrumentationTestRunner;
 import org.mozilla.gecko.FennecNativeActions;
 import org.mozilla.gecko.FennecNativeDriver;
 import org.mozilla.gecko.GeckoAppShell;
@@ -43,6 +44,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -59,6 +61,8 @@ import com.jayway.android.robotium.solo.Solo;
  */
 @SuppressWarnings("unchecked")
 abstract class BaseTest extends BaseRobocopTest {
+    private static final String LOGTAG = "BaseTest";
+
     private static final int VERIFY_URL_TIMEOUT = 2000;
     private static final int MAX_WAIT_ENABLED_TEXT_MS = 10000;
     private static final int MAX_WAIT_HOME_PAGER_HIDDEN_MS = 15000;
@@ -67,6 +71,9 @@ abstract class BaseTest extends BaseRobocopTest {
     public static final int LONG_PRESS_TIME = 6000;
     private static final int GECKO_READY_WAIT_MS = 180000;
     public static final int MAX_WAIT_BLOCK_FOR_EVENT_DATA_MS = 90000;
+
+    // How long to wait for a Robocop:Quit message to actually kill Fennec.
+    private static final int ROBOCOP_QUIT_WAIT_MS = 7000;
 
     private Activity mActivity;
     private int mPreferenceRequestID = 0;
@@ -99,21 +106,11 @@ abstract class BaseTest extends BaseRobocopTest {
         super.setUp();
 
         // Create the intent to be used with all the important arguments.
-        mBaseUrl = mConfig.get("host").replaceAll("(/$)", "");
-        mRawBaseUrl = mConfig.get("rawhost").replaceAll("(/$)", "");
-        Intent i = new Intent(Intent.ACTION_MAIN);
-        mProfile = mConfig.get("profile");
-        i.putExtra("args", "-no-remote -profile " + mProfile);
-        String envString = mConfig.get("envvars");
-        if (envString != "") {
-            String[] envStrings = envString.split(",");
-            for (int iter = 0; iter < envStrings.length; iter++) {
-                i.putExtra("env" + iter, envStrings[iter]);
-            }
-        }
-
-        // Start the activity.
-        setActivityIntent(i);
+        mBaseUrl = ((String) mConfig.get("host")).replaceAll("(/$)", "");
+        mRawBaseUrl = ((String) mConfig.get("rawhost")).replaceAll("(/$)", "");
+        mProfile = (String) mConfig.get("profile");
+        // Start the activity
+        setActivityIntent(createActivityIntent(mConfig));
         mActivity = getActivity();
         // Set up Robotium.solo and Driver objects
         mSolo = new Solo(getInstrumentation(), mActivity);
@@ -161,11 +158,35 @@ abstract class BaseTest extends BaseRobocopTest {
     public void tearDown() throws Exception {
         try {
             mAsserter.endTest();
-            // request a force quit of the browser and wait for it to take effect
-            GeckoAppShell.sendEventToGecko(GeckoEvent.createBroadcastEvent("Robocop:Quit", null));
-            mSolo.sleep(7000);
-            // if still running, finish activities as recommended by Robotium
-            mSolo.finishOpenedActivities();
+
+            // By default, we don't kill Fennec on finish, and we don't finish
+            // all opened activities. Not killing Fennec entirely is intended to
+            // make life better for local testers, who might want to alter a
+            // test that is under development rather than Fennec itself. Not
+            // finishing activities is intended to allow local testers to
+            // manually inspect an activity's state after a test
+            // run. runtestsremote.py sets both of these to "1" on automation.
+            final String killFennecDefault = "0";
+            final String finishActivitiesDefault = "0";
+
+            if ("1".equals(FennecInstrumentationTestRunner.getFennecArguments().getString("quit", killFennecDefault))) {
+                // Request the browser force quit and wait for it to take effect.
+                Log.i(LOGTAG, "Requesting force quit.");
+                GeckoAppShell.sendEventToGecko(GeckoEvent.createBroadcastEvent("Robocop:Quit", null));
+                mSolo.sleep(ROBOCOP_QUIT_WAIT_MS);
+            }
+
+            if ("1".equals(FennecInstrumentationTestRunner.getFennecArguments().getString("finish", finishActivitiesDefault))) {
+                // If still running, finish activities as recommended by Robotium.
+                Log.i(LOGTAG, "Finishing all opened activites.");
+                mSolo.finishOpenedActivities();
+            } else {
+                // This has the effect of keeping the activity-under-test
+                // around; if we don't set it to null, it is killed, either by
+                // finishOpenedActivities above or super.tearDown below.
+                Log.i(LOGTAG, "Trying to keep started activity alive.");
+                setActivity(null);
+            }
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -446,7 +467,7 @@ abstract class BaseTest extends BaseRobocopTest {
     }
 
 
-    /** 
+    /**
      * Select <item> from Menu > "Settings" > <section>.
      */
     public void selectSettingsItem(String section, String item) {
@@ -935,7 +956,7 @@ abstract class BaseTest extends BaseRobocopTest {
     public void setPreferenceAndWaitForChange(final JSONObject jsonPref) {
         mActions.sendGeckoEvent("Preferences:Set", jsonPref.toString());
 
-        // Get the preference name from the json and store it in an array. This array 
+        // Get the preference name from the json and store it in an array. This array
         // will be used later while fetching the preference data.
         String[] prefNames = new String[1];
         try {
