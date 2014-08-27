@@ -688,6 +688,11 @@ def main(args):
         if (options.dm_trans == 'adb' and options.robocopApk):
             dm._checkCmd(["install", "-r", options.robocopApk])
 
+        if not options.autorun:
+            # Force a single loop iteration. The iteration will start Fennec and
+            # the httpd server, but not actually run a test.
+            options.testPath = my_tests[0]
+
         retVal = None
         # Filtering tests
         active_tests = []
@@ -715,14 +720,25 @@ def main(args):
                 mochitest.localProfile = options.profilePath
 
             options.app = "am"
-            options.browserArgs = ["instrument", "-w",
-                                   "-e", "deviceroot", deviceRoot,
-                                   "-e", "quit", "1",
-                                   "-e", "finish", "1",
-                                   "-e", "class"]
-            options.browserArgs.append("org.mozilla.gecko.tests.%s" % test['name'])
-            options.browserArgs.append("org.mozilla.roboexample.test/org.mozilla.gecko.FennecInstrumentationTestRunner")
             mochitest.nsprLogName = "nspr-%s.log" % test['name']
+            if options.autorun:
+                # This launches a test (using "am instrument") and instructs
+                # Fennec to /quit/ the browser (using Robocop:Quit) and to
+                # /finish/ all opened activities.
+                options.browserArgs = ["instrument", "-w",
+                                       "-e", "deviceroot", deviceRoot,
+                                       "-e", "quit", "1",
+                                       "-e", "finish", "1",
+                                       "-e", "class", "org.mozilla.gecko.tests.%s" % test['name'],
+                                       "org.mozilla.roboexample.test/org.mozilla.gecko.FennecInstrumentationTestRunner"]
+            else:
+                # This does not launch a test at all. It launches an activity
+                # that starts Fennec and then waits indefinitely, since cat
+                # never returns.
+                options.browserArgs = ["start",
+                                       "-n", "org.mozilla.roboexample.test/org.mozilla.gecko.LaunchFennecWithConfigurationActivity",
+                                       "&&", "cat"]
+                dm.default_timeout = 7 * 24 * 60 * 60 # One week, in seconds.
 
             # If the test is for checking the import from bookmarks then make sure there is data to import
             if test['name'] == "testImportFromAndroid":
