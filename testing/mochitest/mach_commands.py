@@ -869,11 +869,13 @@ class AndroidCommands(MachCommandBase):
     @Command('robocop', category='testing',
         conditions=[conditions.is_android],
         description='Run a Robocop test.')
+    @CommandArgument('--serve', action='store_true', default=False,
+        help='Serve mochi.test indefinitely')
     @CommandArgument('test_path', default=None, nargs='?',
         metavar='TEST',
         help='Test to run. Can be specified as a Robocop test name (like "testLoad"), ' \
              'or omitted. If omitted, the entire test suite is executed.')
-    def run_robocop(self, test_path):
+    def run_robocop(self, serve, test_path):
         self.tests_dir = os.path.join(self.topobjdir, '_tests')
         self.mochitest_dir = os.path.join(self.tests_dir, 'testing', 'mochitest')
         import imp
@@ -894,6 +896,8 @@ class AndroidCommands(MachCommandBase):
             '--log-mach=-',
         ]
 
+        if serve:
+            args.append('--no-autorun')
         if test_path:
             args.append('--test-path=%s' % test_path)
 
