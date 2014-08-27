@@ -715,7 +715,11 @@ def main(args):
                 mochitest.localProfile = options.profilePath
 
             options.app = "am"
-            options.browserArgs = ["instrument", "-w", "-e", "deviceroot", deviceRoot, "-e", "class"]
+            options.browserArgs = ["instrument", "-w",
+                                   "-e", "deviceroot", deviceRoot,
+                                   "-e", "quit", "1",
+                                   "-e", "finish", "1",
+                                   "-e", "class"]
             options.browserArgs.append("org.mozilla.gecko.tests.%s" % test['name'])
             options.browserArgs.append("org.mozilla.roboexample.test/org.mozilla.gecko.FennecInstrumentationTestRunner")
             mochitest.nsprLogName = "nspr-%s.log" % test['name']
