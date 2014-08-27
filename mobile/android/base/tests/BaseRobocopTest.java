@@ -16,8 +16,10 @@ import org.mozilla.gecko.AppConstants;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.PowerManager;
 import android.test.ActivityInstrumentationTestCase2;
+import android.text.TextUtils;
 import android.util.Log;
 
 @SuppressWarnings("unchecked")
@@ -27,7 +29,7 @@ public abstract class BaseRobocopTest extends ActivityInstrumentationTestCase2<A
         TALOS
     }
 
-    private static final String DEFAULT_ROOT_PATH = "/mnt/sdcard/tests";
+    public static final String DEFAULT_ROOT_PATH = "/mnt/sdcard/tests";
 
     /**
      * The Java Class instance that launches the browser.
@@ -117,5 +119,23 @@ public abstract class BaseRobocopTest extends ActivityInstrumentationTestCase2<A
         final PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
         mAsserter.ok(pm.isScreenOn(),
             "Robocop tests need the test device screen to be powered on.", "");
+    }
+
+    public static Intent createActivityIntent(final Map<String, String> config) {
+        final Intent intent = new Intent(Intent.ACTION_MAIN);
+
+        final String profile = (String) config.get("profile");
+        intent.putExtra("args", "-no-remote -profile " + profile);
+
+        final String envString = (String) config.get("envvars");
+        if (!TextUtils.isEmpty(envString)) {
+            final String[] envStrings = envString.split(",");
+
+            for (int iter = 0; iter < envStrings.length; iter++) {
+                intent.putExtra("env" + iter, envStrings[iter]);
+            }
+        }
+
+        return intent;
     }
 }
