@@ -111,6 +111,13 @@ class RemoteOptions(MochitestOptions):
                     help = "remote directory to use as test root (eg. /mnt/sdcard/tests or /data/local/tests)")
         defaults["remoteTestRoot"] = None
 
+        self.add_option("--logcat-on-fail", action = "store_true",
+                    dest = "logcatOnFail",
+                    help = "Log |adb logcat| output after each failing test.")
+        self.add_option("--no-logcat-on-fail", action = "store_false",
+                    dest = "logcatOnFail",
+                    help = "Do not log |adb logcat| output after a failing test.")
+        defaults["logcatOnFail"] = True
         defaults["logFile"] = "mochitest.log"
         defaults["autorun"] = True
         defaults["closeWhenDone"] = True
@@ -520,11 +527,17 @@ class MochiRemote(Mochitest):
 
         self.log.info("SCREENSHOT: TOTAL PRINTED: [%s]" % printed)
 
-    def printDeviceInfo(self, printLogcat=False):
+    def printLogcat(self):
         try:
-            if printLogcat:
-                logcat = self._dm.getLogcat(filterOutRegexps=fennecLogcatFilters)
-                self.log.info('\n' + ''.join(logcat).decode('utf-8', 'replace'))
+            logcat = self._dm.getLogcat(filterOutRegexps=fennecLogcatFilters)
+            logcat = '\n' + ''.join(logcat).decode('utf-8', 'replace')
+            self.log.process_output('logcat', logcat,
+                command=['adb logcat'])
+        except devicemanager.DMError:
+            self.log.warning("Error getting logcat from device")
+
+    def printDeviceInfo(self):
+        try:
             self.log.info("Device info: %s" % self._dm.getInfo())
             self.log.info("Test root: %s" % self._dm.deviceRoot)
         except devicemanager.DMError:
@@ -773,9 +786,10 @@ def main(args):
                     log.error("runTests() exited with code %s" % result)
                 log_result = mochitest.addLogData()
                 if result != 0 or log_result != 0:
-                    mochitest.printDeviceInfo(printLogcat=True)
                     if options.screenshotOnFail:
                         mochitest.printScreenshots(screenShotDir)
+                    if options.logcatOnFail:
+                        mochitest.printLogcat()
                 # Ensure earlier failures aren't overwritten by success on this run
                 if retVal is None or retVal == 0:
                     retVal = result
