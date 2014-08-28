@@ -415,6 +415,11 @@ class MochitestOptions(optparse.OptionParser):
            "dest": "screenshotOnFail",
            "help": "Take screenshots on all test failures. Set $MOZ_UPLOAD_DIR to a directory for storing the screenshots."
         }],
+        [["--no-screenshot-on-fail"],
+         { "action": "store_false",
+           "dest": "screenshotOnFail",
+           "help": "Do not take screenshots on test failures."
+        }],
         [["--quiet"],
          { "action": "store_true",
            "default": False,
