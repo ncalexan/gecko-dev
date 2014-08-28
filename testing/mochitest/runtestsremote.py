@@ -117,6 +117,7 @@ class RemoteOptions(MochitestOptions):
         defaults["testPath"] = ""
         defaults["app"] = None
         defaults["utilityPath"] = None
+        defaults["screenshotOnFail"] = True
 
         self.set_defaults(**defaults)
 
@@ -773,7 +774,8 @@ def main(args):
                 log_result = mochitest.addLogData()
                 if result != 0 or log_result != 0:
                     mochitest.printDeviceInfo(printLogcat=True)
-                    mochitest.printScreenshots(screenShotDir)
+                    if options.screenshotOnFail:
+                        mochitest.printScreenshots(screenShotDir)
                 # Ensure earlier failures aren't overwritten by success on this run
                 if retVal is None or retVal == 0:
                     retVal = result
