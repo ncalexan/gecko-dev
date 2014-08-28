@@ -118,6 +118,12 @@ class RemoteOptions(MochitestOptions):
                     dest = "logcatOnFail",
                     help = "Do not log |adb logcat| output after a failing test.")
         defaults["logcatOnFail"] = True
+
+        self.add_option("--test-name", action = "append",
+                    type = "string", dest = "testNames",
+                    help = "")
+        defaults["testNames"] = []
+
         defaults["logFile"] = "mochitest.log"
         defaults["autorun"] = True
         defaults["closeWhenDone"] = True
@@ -712,6 +718,9 @@ def main(args):
         active_tests = []
         for test in robocop_tests:
             if options.testPath and options.testPath != test['name']:
+                continue
+
+            if options.testNames and test['name'] not in options.testNames:
                 continue
 
             if not test['name'] in my_tests:
