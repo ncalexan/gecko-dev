@@ -90,6 +90,18 @@ abstract class BaseTest extends BaseRobocopTest {
     private final HashSet<Integer> mKnownTabIDs = new HashSet<Integer>();
 
     protected void blockForGeckoReady() {
+        // On devices with keyguards and screens, this tries to dismiss them and
+        // keep the screen on.  Some parts of Fennec only start when the screen
+        // is on; this tries to make life better for local test runners.
+        runOnUiThreadSync(new Runnable() {
+            @Override
+            public void run() {
+                getActivity().getWindow().addFlags(
+                        android.view.WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                        android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
+        });
+
         try {
             Actions.EventExpecter geckoReadyExpector = mActions.expectGeckoEvent("Gecko:Ready");
             if (!GeckoThread.checkLaunchState(LaunchState.GeckoRunning)) {
