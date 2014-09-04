@@ -101,11 +101,6 @@ class RemoteOptions(MochitestOptions):
                     help = "Path to the folder where robocop.apk is located at.  Primarily used for ADB test running. [DEPRECATED- please use --robocop-apk]")
         defaults["robocopPath"] = ""
 
-        self.add_option("--robocop-ids", action = "store",
-                    type = "string", dest = "robocopIds",
-                    help = "name of the file containing the view ID map (fennec_ids.txt)")
-        defaults["robocopIds"] = ""
-
         self.add_option("--remoteTestRoot", action = "store",
                     type = "string", dest = "remoteTestRoot",
                     help = "remote directory to use as test root (eg. /mnt/sdcard/tests or /data/local/tests)")
@@ -206,12 +201,6 @@ class RemoteOptions(MochitestOptions):
                 options_logger.error("Unable to find robocop APK '%s'" % options.robocopApk)
                 return None
             options.robocopApk = os.path.abspath(options.robocopApk)
-
-        if options.robocopIds != "":
-            if not os.path.exists(options.robocopIds):
-                options_logger.error("Unable to find specified robocop IDs file '%s'" % options.robocopIds)
-                return None
-            options.robocopIds = os.path.abspath(options.robocopIds)
 
         # allow us to keep original application around for cleanup while running robocop via 'am'
         options.remoteappname = options.app
