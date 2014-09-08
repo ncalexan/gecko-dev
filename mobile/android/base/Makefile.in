@@ -172,7 +172,7 @@ jni-stubs.inc: gecko-browser.jar gecko-mozglue.jar gecko-util.jar sync-thirdpart
 	$(JAVAH) -o javah.out -bootclasspath $(JAVA_BOOTCLASSPATH) -classpath $(subst $(NULL) $(NULL),:,$^) $(CLASSES_WITH_JNI)
 	$(PYTHON) $(topsrcdir)/mobile/android/base/jni-generator.py javah.out $@
 
-ANNOTATION_PROCESSOR_JAR_FILES := $(DEPTH)/build/annotationProcessors/annotationProcessors.jar
+ANNOTATION_PROCESSOR_JAR_FILES := $(DEPTH)/mobile/android/annotations/processors/annotationProcessors.jar
 
 GeneratedJNIWrappers.cpp: $(ANNOTATION_PROCESSOR_JAR_FILES)
 GeneratedJNIWrappers.cpp: $(ALL_JARS)
