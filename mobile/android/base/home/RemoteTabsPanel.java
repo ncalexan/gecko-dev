@@ -15,6 +15,8 @@ import org.mozilla.gecko.fxa.login.State;
 import org.mozilla.gecko.fxa.login.State.Action;
 import org.mozilla.gecko.sync.SyncConstants;
 
+import com.example.android.swipedismiss.SwipeDismissListViewTouchListener;
+
 import android.accounts.Account;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -70,6 +72,8 @@ public class RemoteTabsPanel extends HomeFragment {
 
     @Override
     public void load() {
+        new SwipeDismissListViewTouchListener(null, null);
+
         getLoaderManager().initLoader(LOADER_ID_ACCOUNT, null, mAccountLoaderCallbacks);
     }
 

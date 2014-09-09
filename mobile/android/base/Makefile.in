@@ -83,6 +83,7 @@ ALL_JARS = \
   gecko-util.jar \
   nineoldandroids.jar \
   squareup-picasso.jar \
+  swipedismiss.jar \
   sync-thirdparty.jar \
   websockets.jar \
   $(NULL)

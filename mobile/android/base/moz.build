@@ -509,6 +509,7 @@ gbjar.extra_jars = [
     'gecko-util.jar',
     'nineoldandroids.jar',
     'squareup-picasso.jar',
+    'swipedismiss.jar',
     'sync-thirdparty.jar',
     'websockets.jar',
 ]
@@ -561,6 +562,16 @@ noajar.sources += [ thirdparty_source_dir + f for f in [
     'com/nineoldandroids/view/ViewPropertyAnimatorPreHC.java'
 ] ]
 #noajar.javac_flags += ['-Xlint:all']
+
+sdjar = add_java_jar('swipedismiss')
+sdjar.sources += [ thirdparty_source_dir + f for f in [
+    'com/example/android/swipedismiss/SwipeDismissListViewTouchListener.java',
+    'com/example/android/swipedismiss/SwipeDismissTouchListener.java',
+] ]
+sdjar.javac_flags += ['-Xlint:all']
+sdjar.extra_jars += [
+    'nineoldandroids.jar',
+]
 
 spjar = add_java_jar('squareup-picasso')
 spjar.sources += [ thirdparty_source_dir + f for f in [
