@@ -9,6 +9,7 @@ import org.mozilla.gecko.GeckoAppShell;
 import org.mozilla.gecko.GeckoEvent;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.home.RemoteTabsPanel;
+import org.mozilla.gecko.mozglue.RobocopTarget;
 import org.mozilla.gecko.util.ThreadUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +36,7 @@ public final class HomeConfig {
      * to a default set of built-in panels. The DYNAMIC panel type is used by
      * third-party services to create panels with varying types of content.
      */
+    @RobocopTarget
     public static enum PanelType implements Parcelable {
         TOP_SITES("top_sites", TopSitesPanel.class),
         BOOKMARKS("bookmarks", BookmarksPanel.class),
