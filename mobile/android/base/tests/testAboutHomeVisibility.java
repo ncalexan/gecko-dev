@@ -42,6 +42,20 @@ public class testAboutHomeVisibility extends UITest {
         mAboutHome.assertVisible()
                   .assertCurrentPanel(PanelType.TOP_SITES);
 
+        // We can navigate to about:home panels by panel UUID.
+        mAboutHome.navigateToPanelById(HomeConfig.BOOKMARKS_PANEL_ID)
+                  .assertVisible()
+                  .assertCurrentPanel(PanelType.BOOKMARKS);
+        mAboutHome.navigateToPanelById(HomeConfig.HISTORY_PANEL_ID)
+                  .assertVisible()
+                  .assertCurrentPanel(PanelType.HISTORY);
+
+        // Navigating to a non-existent panel opens the default panel. When
+        // testing, we assume said default panel is TOP_SITES.
+        mAboutHome.navigateToPanelById("garbage-panel-uuid")
+                  .assertVisible()
+                  .assertCurrentPanel(PanelType.TOP_SITES);
+
         // TODO: Type in a url and assert the go button is visible.
     }
 }
