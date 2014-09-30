@@ -1495,13 +1495,18 @@ public final class HomeConfig {
         public void setOnReloadListener(OnReloadListener listener);
     }
 
-    // UUIDs used to create PanelConfigs for default built-in panels
-    private static final String TOP_SITES_PANEL_ID = "4becc86b-41eb-429a-a042-88fe8b5a094e";
-    private static final String BOOKMARKS_PANEL_ID = "7f6d419a-cd6c-4e34-b26f-f68b1b551907";
-    private static final String READING_LIST_PANEL_ID = "20f4549a-64ad-4c32-93e4-1dcef792733b";
-    private static final String HISTORY_PANEL_ID = "f134bf20-11f7-4867-ab8b-e8e705d7fbe8";
-    private static final String RECENT_TABS_PANEL_ID = "5c2601a5-eedc-4477-b297-ce4cef52adf8";
-    private static final String REMOTE_TABS_PANEL_ID = "72429afd-8d8b-43d8-9189-14b779c563d0";
+    // UUIDs used to create PanelConfigs for default built-in panels. These are
+    // public because they can be used in "about:home?panel=UUID" query strings
+    // to open specific panels without querying the active Home Panel
+    // configuration. Because they don't consider the active configuration, it
+    // is only sensible to do this for built-in panels (and not for dynamic
+    // panels).
+    public static final String TOP_SITES_PANEL_ID = "4becc86b-41eb-429a-a042-88fe8b5a094e";
+    public static final String BOOKMARKS_PANEL_ID = "7f6d419a-cd6c-4e34-b26f-f68b1b551907";
+    public static final String READING_LIST_PANEL_ID = "20f4549a-64ad-4c32-93e4-1dcef792733b";
+    public static final String HISTORY_PANEL_ID = "f134bf20-11f7-4867-ab8b-e8e705d7fbe8";
+    public static final String RECENT_TABS_PANEL_ID = "5c2601a5-eedc-4477-b297-ce4cef52adf8";
+    public static final String REMOTE_TABS_PANEL_ID = "72429afd-8d8b-43d8-9189-14b779c563d0";
 
     private final HomeConfigBackend mBackend;
 
