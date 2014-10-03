@@ -10,10 +10,13 @@ from collections import (
 
 import itertools
 import os
+import shutil
 import time
 import types
 import xml.dom.minidom as minidom
 import xml.etree.ElementTree as ET
+
+from mach.mixin.process import ProcessExecutionMixin
 
 from mozpack.copier import FileCopier
 from mozpack.files import (FileFinder, PreprocessedFile)
@@ -23,8 +26,8 @@ import mozpack.path as mozpath
 from .common import CommonBackend
 from ..frontend.data import (
     AndroidEclipseProjectData,
-    SandboxDerived,
-    SandboxWrapped,
+    ContextDerived,
+    ContextWrapped,
 )
 from ..makeutil import Makefile
 from ..util import ensureParentDir
@@ -38,7 +41,7 @@ def pretty_print(element):
     return minidom.parseString(s).firstChild.toprettyxml(indent='  ')
 
 
-class AndroidStudioBackend(CommonBackend):
+class AndroidStudioBackend(CommonBackend, ProcessExecutionMixin):
     """Backend that generates Android Studio/IDEA IntelliJ project files.
     """
 
@@ -66,7 +69,7 @@ class AndroidStudioBackend(CommonBackend):
     def consume_object(self, obj):
         """Write out Android Studio project files."""
 
-        if not isinstance(obj, SandboxDerived):
+        if not isinstance(obj, ContextDerived):
             return
 
         CommonBackend.consume_object(self, obj)
@@ -79,7 +82,7 @@ class AndroidStudioBackend(CommonBackend):
         obj.ack()
 
         # ... and handle the one case we care about specially.
-        if isinstance(obj, SandboxWrapped) and isinstance(obj.wrapped, AndroidEclipseProjectData):
+        if isinstance(obj, ContextWrapped) and isinstance(obj.wrapped, AndroidEclipseProjectData):
             self._process_project_data(obj.wrapped, obj.srcdir, obj.objdir)
 
     def consume_finished(self):
@@ -217,12 +220,30 @@ class AndroidStudioBackend(CommonBackend):
         template_directory = os.path.abspath(mozpath.join(os.path.dirname(__file__),
             'templates', 'android_studio'))
 
-        project_directory = mozpath.join(self.environment.topobjdir, 'android_studio', data.name)
         manifest_path = mozpath.join(self.environment.topobjdir, 'android_studio', '%s.manifest' % data.name)
-
         manifest = self._manifest_for_project(srcdir, data)
         ensureParentDir(manifest_path)
         manifest.write(path=manifest_path)
+
+        project_directory = mozpath.join(self.environment.topobjdir, 'android_studio', data.name)
+
+        # Start clean.
+        shutil.rmtree(project_directory, ignore_errors=True)
+
+        self.run_process(
+            args=['android', 'create', 'project',
+                '-g', # Gradle.
+                '-v', '0.12.+', # Gradle version.
+                '-t', 'android-19', # XXX get this from environment.
+                '-p', data.name, # Project (== directory) name.
+                '-k', data.package_name, # Package name.
+                '-a', 'UnusedActivity' # Activity name; immediately deleted.
+            ],
+            cwd=mozpath.join(self.environment.topobjdir, 'android_studio'),
+            log_name='android')
+
+        shutil.rmtree(mozpath.join(project_directory, 'src'), ignore_errors=True)
+        # manifest.add_optional_exists('gradle')
 
         defines = {}
         defines['IDE_OBJDIR'] = objdir
@@ -248,7 +269,7 @@ class AndroidStudioBackend(CommonBackend):
             defines['IDE_PROJECT_FILTERED_RESOURCES'] = ''
         defines['ANDROID_TARGET_SDK'] = self.environment.substs['ANDROID_TARGET_SDK']
 
-        defines['IDE_PLUGIN'] = 'android-library' if data.is_library else 'android'
+        defines['IDE_PLUGIN'] = 'com.android.library' if data.is_library else 'com.android.application'
 
         defines['IDE_VARIANTS'] = 'libraryVariants' if data.is_library else 'applicationVariants'
 
@@ -317,7 +338,7 @@ class AndroidStudioBackend(CommonBackend):
             self.summary.updated_count += 1
         else:
             self.summary.created_count += 1
-        copier.copy(project_directory, skip_if_older=False, remove_unaccounted=True)
+        copier.copy(project_directory, skip_if_older=False, remove_unaccounted=False)
 
         # Collect information necessary to prepare all Eclipse projects in the
         # tree.

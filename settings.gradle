@@ -1,0 +1,25 @@
+String topobjdir = '/Users/nalexander/Mozilla/gecko-dev/objdir-droid/'
+
+include ':Fennec'
+project(':Fennec').projectDir = new File(topobjdir + 'android_studio/Fennec')
+
+include ':FennecOmnijar'
+project(':FennecOmnijar').projectDir = new File(topobjdir + 'android_studio/FennecOmnijar')
+
+include ':FennecResources'
+project(':FennecResources').projectDir = new File(topobjdir + 'android_studio/FennecResources')
+
+include ':FennecResourcesBranding'
+project(':FennecResourcesBranding').projectDir = new File(topobjdir + 'android_studio/FennecResourcesBranding')
+
+include ':FennecResourcesGenerated'
+project(':FennecResourcesGenerated').projectDir = new File(topobjdir + 'android_studio/FennecResourcesGenerated')
+
+include ':FennecResourcesSearch'
+project(':FennecResourcesSearch').projectDir = new File(topobjdir + 'android_studio/FennecResourcesSearch')
+
+include ':FennecResourcesStatic'
+project(':FennecResourcesStatic').projectDir = new File(topobjdir + 'android_studio/FennecResourcesStatic')
+
+include ':FennecStumbler'
+project(':FennecStumbler').projectDir = new File(topobjdir + 'android_studio/FennecStumbler')

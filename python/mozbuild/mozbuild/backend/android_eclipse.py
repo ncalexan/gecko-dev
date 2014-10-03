@@ -187,7 +187,7 @@ class AndroidEclipseBackend(CommonBackend):
         # -- this fails. That's by design, to avoid crashes on device caused by
         # missing native libraries.
         for src, dst in project.libs:
-            manifest.add_copy(mozpath.join(srcdir, src), dst)
+            manifest.add_copy(mozpath.join(srcdir, src), mozpath.join('libs', dst))
 
         return manifest
 
