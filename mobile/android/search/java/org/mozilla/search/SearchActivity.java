@@ -4,6 +4,17 @@
 
 package org.mozilla.search;
 
+import org.mozilla.gecko.LocaleAware;
+import org.mozilla.gecko.R;
+import org.mozilla.gecko.Telemetry;
+import org.mozilla.gecko.TelemetryContract;
+import org.mozilla.gecko.db.BrowserContract.SearchHistory;
+import org.mozilla.search.autocomplete.SearchBar;
+import org.mozilla.search.autocomplete.SuggestionsFragment;
+import org.mozilla.search.providers.SearchEngine;
+import org.mozilla.search.providers.SearchEngineManager;
+import org.mozilla.search.providers.SearchEngineManager.SearchEngineCallback;
+
 import android.content.AsyncQueryHandler;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -17,16 +28,6 @@ import android.view.animation.Interpolator;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
-
-import org.mozilla.gecko.LocaleAware;
-import org.mozilla.gecko.Telemetry;
-import org.mozilla.gecko.TelemetryContract;
-import org.mozilla.gecko.db.BrowserContract.SearchHistory;
-import org.mozilla.search.autocomplete.SearchBar;
-import org.mozilla.search.autocomplete.SuggestionsFragment;
-import org.mozilla.search.providers.SearchEngine;
-import org.mozilla.search.providers.SearchEngineManager;
-import org.mozilla.search.providers.SearchEngineManager.SearchEngineCallback;
 
 /**
  * The main entrance for the Android search intent.
