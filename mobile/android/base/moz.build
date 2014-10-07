@@ -826,9 +826,10 @@ if CONFIG['MOZ_CRASHREPORTER']:
     resources.referenced_projects += ['../' + crashreporter.name]
 
 if CONFIG['MOZ_ANDROID_MLS_STUMBLER']:
-    main.included_projects += ['../FennecStumbler']
-    main.referenced_projects += ['../FennecStumbler']
     DEFINES['MOZ_STUMBLER_API_KEY'] = CONFIG['MOZ_MOZILLA_API_KEY']
+
+    # The stumbler is built as part of Fennec, so we follow suit in Eclipse.
+    main.add_classpathentry('stumbler', TOPSRCDIR + '/mobile/android/stumbler/java', dstdir='stumbler')
 
 if CONFIG['MOZ_ANDROID_SEARCH_ACTIVITY']:
     searchres = add_android_eclipse_library_project('FennecResourcesSearch')
