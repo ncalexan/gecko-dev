@@ -51,6 +51,9 @@ _OPT\.OBJ/
 \.cproject$
 \.settings/
 
+# Ignore the files and directories that Gradle builds create.
+\.gradle/
+
 # Ignore the directory that JetBrains IDEs create
 \.idea/
 

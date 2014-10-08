@@ -1,0 +1,17 @@
+project.ext {
+   topobjdir = project.properties['topobjdir']
+}
+project.buildDir = "${project.topobjdir}/gradle"
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.12.2'
+    }
+}
+
+repositories {
+    jcenter()
+}

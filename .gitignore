@@ -50,6 +50,9 @@ parser/html/java/javaparser/
 .cproject
 .settings/
 
+# Ignore the files and directories that Gradle builds create.
+.gradle/
+
 # Python virtualenv artifacts.
 python/psutil/*.so
 python/psutil/*.pyd
