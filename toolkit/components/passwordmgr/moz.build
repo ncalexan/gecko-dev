@@ -51,6 +51,7 @@ EXTRA_JS_MODULES += [
 
 if CONFIG['OS_TARGET'] == 'Android':
     EXTRA_COMPONENTS += [
+        'storage-fennecStorage.js',
         'storage-mozStorage.js',
     ]
 else:

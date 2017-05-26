@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html>
+<!--
+https://bugzilla.mozilla.org/show_bug.cgi?id=1136477
+Migrated from Robocop: https://bugzilla.mozilla.org/show_bug.cgi?id=1184186
+-->
+<head>
+  <meta charset="utf-8">
+  <title>Test for Bug 1136477</title>
+  <script type="application/javascript" src="chrome://mochikit/content/tests/SimpleTest/SimpleTest.js"></script>
+  <script type="application/javascript" src="chrome://mochikit/content/tests/SimpleTest/SpawnTask.js"></script>
+  <link rel="stylesheet" type="text/css" href="chrome://global/skin"/>
+  <link rel="stylesheet" type="text/css" href="chrome://mochikit/content/tests/SimpleTest/test.css"/>
+  <script type="application/javascript;version=1.8" src="head.js"></script>
+  <script type="application/javascript;version=1.8">
+
+  "use strict";
+
+  const { classes: Cc, interfaces: Ci, utils: Cu } = Components;
+
+  Components.utils.import("resource://gre/modules/AppConstants.jsm");
+
+  // Android backed LoginManager storage is available behind the build flag MOZ_ANDROID_LOGINS_STORAGE_USE.
+  // This is a ugly way to hide the test behind that flag.
+
+  if (AppConstants.MOZ_ANDROID_LOGINS_STORAGE_USE) {
+    const LoginInfo = Components.Constructor("@mozilla.org/login-manager/loginInfo;1", "nsILoginInfo", "init");
+    const storage = Cc["@mozilla.org/login-manager/storage/fennecStorage;1"]
+                    .getService(Ci.nsILoginManagerStorage);
+
+    var testLogin1 = new LoginInfo("http://test.com", null, "http://test.com",
+                                  "testLogin1", "testpass1", "u1", "p1");
+
+    var testLogin2 = new LoginInfo("http://test.org", "https://test.org", null,
+                                  "testLogin2", "testpass2", "u2", "p2");
+
+    // Login with null values for mandatory fields.
+    var testLogin3 = new LoginInfo("http://test.org", "https://test.org", null,
+                                  null, null, null, null);
+
+    /**
+     * Checks that the two provided arrays of nsILoginInfo have the same length,
+     * and every login in "expected" is also found in "actual".  The comparison
+     * uses the "equals" method of nsILoginInfo, that does not include
+     * nsILoginMetaInfo properties in the test.
+     */
+    function assertLoginListsEqual(actual, expected) {
+      is(expected.length, actual.length, "loginlist length equals");
+      ok(expected.every(e => actual.some(a => a.equals(e))), "loginlist elements equals");
+    }
+
+    /**
+     * Checks that every login in "expected" matches one in "actual".
+     * The comparison uses the "matches" method of nsILoginInfo.
+     */
+    function assertLoginListsMatches(actual, expected, ignorePassword) {
+      is(expected.length, actual.length, "loginlist length equals");
+      ok(expected.every(e => actual.some(a => a.matches(e, ignorePassword))), "loginlist elements matches");
+    }
+
+    /**
+     * Checks that the two provided arrays of strings contain the same values,
+     * maybe in a different order, case-sensitively.
+     */
+    function assertDisabledHostsEqual(actual, expected) {
+      is(expected.length, actual.length, "disabledHosts length equals");
+      ok(expected.every(e => actual.some(a => (a === e))), "disabledHosts elements equals");
+    }
+
+    function checkStorageData(storage, ref_disabledHosts, ref_logins)
+    {
+      assertLoginListsEqual(storage.getAllLogins(), ref_logins);
+      assertDisabledHostsEqual(storage.getAllDisabledHosts(), ref_disabledHosts);
+    }
+
+    function retrieveAndVerifyLoginByProps(propName, propValue, actualLogin) {
+      var prop = Cc["@mozilla.org/hash-property-bag;1"].createInstance(Ci.nsIWritablePropertyBag2);
+      prop.setPropertyAsAUTF8String(propName, propValue);
+      let logins = storage.searchLogins({}, prop);
+      assertLoginListsEqual(logins, [actualLogin]);
+    }
+
+    add_task(function* test_disabledHosts_Test() {
+      checkStorageData(storage, [], []);
+      // Disable saving logins to localhost and verify.
+      storage.setLoginSavingEnabled("localhost", false);
+      ok(!storage.getLoginSavingEnabled("localhost"), "localhost is a disabled hostname");
+      checkStorageData(storage, ["localhost"], []);
+      // Enable saving logins to localhost and verify
+      storage.setLoginSavingEnabled("localhost", true);
+      ok(storage.getLoginSavingEnabled("localhost"), "localhost is not a disabled hostname");
+      checkStorageData(storage, [], []);
+    });
+
+    add_task(function* test_login_CRUD() {
+      // Create a new login and verify storage data.
+      storage.addLogin(testLogin1);
+      checkStorageData(storage, [], [testLogin1]);
+
+      // Add another login and verify all logins are retrieved.
+      storage.addLogin(testLogin2);
+      checkStorageData(storage, [], [testLogin1, testLogin2]);
+
+      // Verify login counts.
+      var count = storage.countLogins(testLogin2.hostname, testLogin2.formSubmitURL, testLogin2.httpRealm);
+      is(1, count, "countLogins is correct");
+      // Verify formSubmitUrl schema adjustment.
+      count = storage.countLogins(testLogin2.hostname, "http://test.org", testLogin2.httpRealm);
+      is(1, count, "countLogins is correct");
+      //count = storage.countLogins(testLogin2.hostname, "javascript://test.org", testLogin2.httpRealm);
+      //is(0, count, "countLogins is correct");
+      count = storage.countLogins(null, null, null);
+      is(0, count, "countLogins is correct");
+
+      // Search logins by properties test.
+      var logins = storage.findLogins({}, testLogin1.hostname, testLogin1.formSubmitURL, testLogin1.httpRealm);
+      assertLoginListsEqual(logins, [testLogin1]);
+
+      logins[0].QueryInterface(Ci.nsILoginMetaInfo);
+      retrieveAndVerifyLoginByProps("guid", logins[0].guid, testLogin1);
+      //retrieveAndVerifyLoginByProps("encryptedUsername", testLogin1.username, testLogin1);
+      //retrieveAndVerifyLoginByProps("encryptedPassword", testLogin1.password, testLogin1);
+      retrieveAndVerifyLoginByProps("usernameField", testLogin2.usernameField, testLogin2);
+      retrieveAndVerifyLoginByProps("passwordField", testLogin2.passwordField, testLogin2);
+
+      // Update logins and verify stored data.
+      testLogin1.password = "p3";
+      storage.modifyLogin(logins[0], testLogin1);
+      retrieveAndVerifyLoginByProps("guid", logins[0].guid, testLogin1);
+      //retrieveAndVerifyLoginByProps("encryptedPassword", "p3", testLogin1);
+
+      // Delete logins test.
+      storage.removeLogin(testLogin2);
+      checkStorageData(storage, [], [testLogin1]);
+      storage.removeAllLogins();
+      checkStorageData(storage, [], []);
+    });
+
+    add_task(function* test_Login_Failure() {
+      // Try adding incorrect login and verify that it throws an error.
+      SimpleTest.doesThrow(() => storage.addLogin(testLogin3));
+      checkStorageData(storage, [], []);
+
+      // Empty username should morph to null and throw an error.
+      testLogin3.username = "";
+      SimpleTest.doesThrow(() => storage.addLogin(testLogin3));
+      checkStorageData(storage, [], []);
+
+      // Empty password should morph to null and throw an error.
+      testLogin3.username = "user3";
+      testLogin3.password = "";
+      SimpleTest.doesThrow(() => storage.addLogin(testLogin3));
+      checkStorageData(storage, [], []);
+
+      // Verify that storage can be stored after failed attempt with correct value.
+      storage.addLogin(testLogin1);
+      checkStorageData(storage, [], [testLogin1]);
+
+      var logins = storage.findLogins({}, testLogin1.hostname, testLogin1.formSubmitURL, testLogin1.httpRealm);
+      assertLoginListsEqual(logins, [testLogin1]);
+
+      // Verify that adding Login with duplicate guid throws an error.
+      logins[0].QueryInterface(Ci.nsILoginMetaInfo);
+      testLogin2.QueryInterface(Ci.nsILoginMetaInfo);
+      testLogin2.guid = logins[0].guid;
+      SimpleTest.doesThrow(() => storage.addLogin(testLogin2));
+      checkStorageData(storage, [], [testLogin1]);
+
+      // Verify that removing non existent login throws an error.
+      testLogin2.guid = null;
+      SimpleTest.doesThrow(() => storage.removeLogin(testLogin2));
+      checkStorageData(storage, [], [testLogin1]);
+
+      // Verify that modifying non existent login throws an error.
+      SimpleTest.doesThrow(() => storage.modifyLogin(testLogin2));
+      checkStorageData(storage, [], [testLogin1]);
+
+      // Add another login to storage.
+      storage.addLogin(testLogin2);
+      checkStorageData(storage, [], [testLogin1, testLogin2]);
+
+      // Verify that modifying a logins with no change fails.
+      var testLogin4 = testLogin2.clone();
+      SimpleTest.doesThrow(() => storage.modifyLogin(testLogin4));
+      checkStorageData(storage, [], [testLogin1, testLogin2]);
+
+      // Verify that modifying a logins with an existing guid fails.
+      testLogin4 = testLogin2.clone();
+      testLogin4.QueryInterface(Ci.nsILoginMetaInfo);
+      testLogin4.guid = logins[0].guid;
+      SimpleTest.doesThrow(() => storage.modifyLogin(testLogin4));
+      checkStorageData(storage, [], [testLogin1, testLogin2]);
+
+      // Wipe database.
+      storage.removeLogin(testLogin1);
+      storage.removeLogin(testLogin2);
+      checkStorageData(storage, [], []);
+    });
+  } else {
+    // Dummy test condition so as not to fail the chrome test.
+    is(1, 1, "Dummy condition when not using new fennecStorage");
+  }
+
+  </script>
+</head>
+<body>
+<a target="_blank" href="https://bugzilla.mozilla.org/show_bug.cgi?id=946857">Mozilla Bug 946857</a>
+<p id="display"></p>
+<div id="content" style="display: none">
+
+</div>
+<pre id="test">
+</pre>
+</body>
+</html>

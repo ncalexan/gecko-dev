@@ -292,6 +292,7 @@
 @BINPATH@/components/nsLoginInfo.js
 @BINPATH@/components/nsLoginManager.js
 @BINPATH@/components/nsLoginManagerPrompter.js
+@BINPATH@/components/storage-fennecStorage.js
 @BINPATH@/components/storage-mozStorage.js
 @BINPATH@/components/crypto-SDR.js
 @BINPATH@/components/TooltipTextProvider.js

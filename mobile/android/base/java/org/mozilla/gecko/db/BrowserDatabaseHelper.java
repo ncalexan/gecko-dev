@@ -61,7 +61,7 @@ public final class BrowserDatabaseHelper extends SQLiteOpenHelper {
 
     // Replace the Bug number below with your Bug that is conducting a DB upgrade, as to force a merge conflict with any
     // other patches that require a DB upgrade.
-    public static final int DATABASE_VERSION = 37; // Bug 1351805
+    public static final int DATABASE_VERSION = 38; // Bug XXX.
     public static final String DATABASE_NAME = "browser.db";
 
     final protected Context mContext;
@@ -2017,6 +2017,86 @@ public final class BrowserDatabaseHelper extends SQLiteOpenHelper {
         createCombinedViewOn34(db);
     }
 
+    private void upgradeDatabaseFrom37to38(final SQLiteDatabase db) {
+        migrateLogins(db);
+        migrateDeletedLogins(db);
+        migrateDisabledHosts(db);
+    }
+
+    private void migrateLogins(final SQLiteDatabase db) {
+        Cursor cursor = null;
+        try {
+            cursor = mContext.getContentResolver().query(BrowserContract.Passwords.CONTENT_URI, null, null, null, null);
+            if (cursor == null) {
+                return;
+            }
+
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                final ContentValues contentValues = new ContentValues();
+                try {
+                    DatabaseUtils.cursorRowToContentValues(cursor, contentValues);
+                    contentValues.remove(BrowserContract.Passwords.ID);
+                    db.insertOrThrow(TABLE_LOGINS, BrowserContract.Logins.GUID, contentValues);
+                } catch (Exception e) {
+                    Log.w(LOGTAG, "Ignoring exception caught while migrating logins.", e);
+                }
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    private void migrateDeletedLogins(final SQLiteDatabase db) {
+        Cursor cursor = null;
+        try {
+            cursor = mContext.getContentResolver().query(BrowserContract.DeletedPasswords.CONTENT_URI, null, null, null, null);
+            if (cursor == null) {
+                return;
+            }
+
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                final ContentValues contentValues = new ContentValues();
+                try {
+                    DatabaseUtils.cursorRowToContentValues(cursor, contentValues);
+                    contentValues.remove(BrowserContract.DeletedPasswords.ID);
+                    db.insertOrThrow(TABLE_DELETED_LOGINS, BrowserContract.DeletedLogins.GUID, contentValues);
+                } catch (Exception e) {
+                    Log.w(LOGTAG, "Ignoring exception caught while migrating deleted logins.", e);
+                }
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    private void migrateDisabledHosts(final SQLiteDatabase db) {
+        Cursor cursor = null;
+        try {
+            cursor = mContext.getContentResolver().query(BrowserContract.GeckoDisabledHosts.CONTENT_URI, null, null, null, null);
+            if (cursor == null) {
+                return;
+            }
+
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                final ContentValues contentValues = new ContentValues();
+                try {
+                    DatabaseUtils.cursorRowToContentValues(cursor, contentValues);
+                    db.insertOrThrow(TABLE_DISABLED_HOSTS, BrowserContract.LoginsDisabledHosts.HOSTNAME, contentValues);
+                } catch (Exception e) {
+                    Log.w(LOGTAG, "Ignoring exception caught while migrating disabled hosts.", e);
+                }
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
     private void createV19CombinedView(SQLiteDatabase db) {
         db.execSQL("DROP VIEW IF EXISTS " + VIEW_COMBINED);
         db.execSQL("DROP VIEW IF EXISTS " + VIEW_COMBINED_WITH_FAVICONS);
@@ -2141,6 +2221,10 @@ public final class BrowserDatabaseHelper extends SQLiteOpenHelper {
 
                 case 37:
                     upgradeDatabaseFrom36to37(db);
+                    break;
+
+                case 38:
+                    upgradeDatabaseFrom37to38(db);
                     break;
             }
         }

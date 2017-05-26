@@ -318,4 +318,11 @@ public class AppConstants {
 //#else
         false;
 //#endif
+
+    public static final boolean MOZ_ANDROID_LOGINS_STORAGE_USE =
+//#ifdef MOZ_ANDROID_LOGINS_STORAGE_USE
+    true;
+//#else
+    false;
+//#endif
 }

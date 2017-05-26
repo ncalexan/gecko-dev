@@ -4,16 +4,6 @@
 
 package org.mozilla.gecko.db;
 
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.List;
-
-import org.mozilla.gecko.GeckoProfile;
-import org.mozilla.gecko.annotation.RobocopTarget;
-import org.mozilla.gecko.db.BrowserContract.ExpirePriority;
-import org.mozilla.gecko.distribution.Distribution;
-import org.mozilla.gecko.icons.decoders.LoadFaviconResult;
-
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
@@ -24,6 +14,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v4.content.CursorLoader;
+
+import org.mozilla.gecko.GeckoProfile;
+import org.mozilla.gecko.annotation.RobocopTarget;
+import org.mozilla.gecko.db.BrowserContract.ExpirePriority;
+import org.mozilla.gecko.distribution.Distribution;
+import org.mozilla.gecko.icons.decoders.LoadFaviconResult;
+
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Interface for interactions with all databases. If you want an instance
@@ -39,6 +39,7 @@ public abstract class BrowserDB {
     public abstract TabsAccessor getTabsAccessor();
     public abstract URLMetadata getURLMetadata();
     @RobocopTarget public abstract UrlAnnotations getUrlAnnotations();
+    public abstract LoginsAccessor getLoginsAccessor();
 
     /**
      * Add default bookmarks to the database.
