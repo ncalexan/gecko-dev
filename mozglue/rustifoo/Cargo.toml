@@ -5,6 +5,7 @@ authors = ["Ralph Giles <giles@mozilla.com>"]
 
 [dependencies]
 lazy_static = "0.2"
+jni = "0.4.0" # { git = "https://github.com/prevoty/jni-rs" }
 
 [lib]
 path = "src/lib.rs"
