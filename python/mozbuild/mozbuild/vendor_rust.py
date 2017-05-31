@@ -269,6 +269,7 @@ license file's hash.
             ('gkrust-gtest', 'toolkit/library/gtest/rust'),
             ('mozjs_sys', 'js/src'),
             ('geckodriver', 'testing/geckodriver'),
+            ('rustifoo', 'mozglue/rustifoo')
         )
         for (lib, crate_root) in crates_and_roots:
             path = mozpath.join(self.topsrcdir, crate_root)
