@@ -1,0 +1,33 @@
+[package]
+
+name = "combine"
+version = "2.3.2"
+authors = ["Markus Westerlind <marwes91@gmail.com>"]
+
+description = "Fast parser combinators on arbitrary streams with zero-copy support."
+
+repository = "https://github.com/Marwes/combine"
+documentation = "https://docs.rs/combine"
+
+readme = "README.md"
+
+keywords = ["parser", "parsing", "combinators", "ll"]
+
+categories = ["parsing"]
+
+license = "MIT"
+
+[lib]
+name = "combine"
+path = "src/lib.rs"
+
+[dependencies]
+ascii = "0.7.0"
+
+[dev-dependencies]
+byteorder = "0.5.3"
+
+
+[features]
+# Run the mp4 benchmark, requires a mp4 file named `small.mp4` in the benches directory
+mp4 = []
