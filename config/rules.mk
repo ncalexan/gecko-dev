@@ -908,7 +908,7 @@ cargo_build_flags = $(CARGOFLAGS)
 ifndef MOZ_DEBUG_RUST
 cargo_build_flags += --release
 endif
-cargo_build_flags += --frozen
+# cargo_build_flags += --frozen
 
 cargo_build_flags += --manifest-path $(CARGO_FILE)
 ifdef BUILD_VERBOSE_LOG
