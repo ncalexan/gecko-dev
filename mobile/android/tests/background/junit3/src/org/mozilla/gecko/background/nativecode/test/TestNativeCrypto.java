@@ -172,4 +172,16 @@ public class TestNativeCrypto extends TestCase {
       assertEquals(expected[i], key[i]);
     }
   }
+
+  // The rest is just regular ol' java!
+  public void testHello() {
+    long start = System.currentTimeMillis();
+    final String output = NativeCrypto.hello("josh");
+    long end = System.currentTimeMillis();
+
+    assertNotNull(output);
+    assertEquals(output, "Hello, josh!");
+
+    assertEquals(NativeCrypto.hello("Rust consumer"), "Hello, Rust consumer!");
+ }
 }

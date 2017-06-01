@@ -34,7 +34,7 @@ use jni::sys::jstring;
 // This turns off linter warnings because the name doesn't conform to
 // conventions.
 #[allow(non_snake_case)]
-pub extern "C" fn Java_HelloWorld_hello(env: JNIEnv,
+pub extern "C" fn Java_org_mozilla_gecko_background_nativecode_NativeCrypto_hello(env: JNIEnv,
                                         // this is the class that owns our
                                         // static method. Not going to be
                                         // used, but still needs to have an

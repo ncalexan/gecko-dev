@@ -12,13 +12,20 @@
 #include "mozilla/RefPtr.h"
 
 extern "C" char* rustifoo_msg();
+extern "C"
+__attribute__ ((visibility("default")))
+jstring MOZ_JNICALL Java_org_mozilla_gecko_background_nativecode_NativeCrypto_hello (JNIEnv *, jclass, jstring);
 
 extern "C"
 __attribute__ ((visibility("default")))
 void MOZ_JNICALL
-Java_org_mozilla_gecko_mozglue_GeckoLoader_putenv(JNIEnv *jenv, jclass, jstring map)
+Java_org_mozilla_gecko_mozglue_GeckoLoader_putenv(JNIEnv *jenv, jclass clazz, jstring map)
 {
-    const char* str = rustifoo_msg();
+    // Without a consumer, the linker strips our Rust symbols.  It's not clear how to work around this yet.
+    const jstring dummy = Java_org_mozilla_gecko_background_nativecode_NativeCrypto_hello(jenv, clazz, map);
+
+    const char* str;
+
     // XXX: java doesn't give us true UTF8, we should figure out something
     // better to do here
     str = jenv->GetStringUTFChars(map, nullptr);

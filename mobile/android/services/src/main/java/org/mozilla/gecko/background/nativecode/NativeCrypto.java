@@ -57,4 +57,9 @@ public class NativeCrypto {
    * Wrapper to finalize a SHA-256 context in native code. Returns digest.
    */
   public native static byte[] sha256finalize(byte[] ctx);
+
+
+  // This declares that the static `hello` method will be provided
+  // a native library.
+  public static native String hello(String input);
 }
